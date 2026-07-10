@@ -1,0 +1,6 @@
+{
+  "appId": "com.productivedude.lifeos",
+  "appName": "PRODUCTIVEDUDE",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
