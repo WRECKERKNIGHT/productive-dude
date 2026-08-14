@@ -26,6 +26,7 @@ export const ROLES = [
     emoji: '🎓',
     icon: 'school',
     accent: '#2563eb',
+    image: '/img/roles/student.jpg',
     tagline: 'Master your syllabus, pass exams, and level up your GPA.',
     desc: 'Syllabus velocity hub, exam countdown, GPA tracking, and focused study-session logging.',
     goals: [
@@ -111,6 +112,7 @@ export const ROLES = [
     emoji: '🍎',
     icon: 'co_present',
     accent: '#059669',
+    image: '/img/roles/teacher.jpg',
     tagline: 'Plan lessons, grade papers, and manage your classrooms.',
     desc: 'Lesson planner, class schedules, a gradebook, and homework assignment tracking.',
     goals: [
@@ -203,6 +205,7 @@ export const ROLES = [
     emoji: '💻',
     icon: 'code',
     accent: '#7c3aed',
+    image: '/img/roles/developer.jpg',
     tagline: 'Ship features, log commits, and keep your skills sharp.',
     desc: 'Sprint boards, commit logs, learning goals, and deep-focus coding sessions.',
     goals: [
@@ -286,6 +289,7 @@ export const ROLES = [
     emoji: '🎨',
     icon: 'palette',
     accent: '#ea580c',
+    image: '/img/roles/designer.jpg',
     tagline: 'Run projects, collect assets, and iterate on feedback.',
     desc: 'Project pipelines, asset libraries, feedback logs, and moodboard inspiration.',
     goals: [
@@ -369,6 +373,7 @@ export const ROLES = [
     emoji: '🎬',
     icon: 'videocam',
     accent: '#dc2626',
+    image: '/img/roles/creator.jpg',
     tagline: 'Plan content, hit uploads, and grow your audience.',
     desc: 'Content calendars, upload pipeline, idea bank, and audience growth tracking.',
     goals: [
@@ -452,6 +457,7 @@ export const ROLES = [
     emoji: '✍️',
     icon: 'edit_note',
     accent: '#be185d',
+    image: '/img/roles/writer.jpg',
     tagline: 'Hit word counts, finish chapters, and publish consistently.',
     desc: 'Daily word targets, chapter progress, article queue, and writing-sprint logs.',
     goals: [
@@ -536,6 +542,7 @@ export const ROLES = [
     emoji: '🚀',
     icon: 'rocket_launch',
     accent: '#0d9488',
+    image: '/img/roles/entrepreneur.jpg',
     tagline: 'Grow revenue, ship milestones, and close leads.',
     desc: 'Revenue tracking, product roadmap, lead pipeline, and startup metrics.',
     goals: [
@@ -621,6 +628,7 @@ export const ROLES = [
     emoji: '💪',
     icon: 'fitness_center',
     accent: '#16a34a',
+    image: '/img/roles/health.jpg',
     tagline: 'Train, hydrate, sleep, and recover like an athlete.',
     desc: 'Workout logs, water and nutrition counters, sleep tracking, and recovery scores.',
     goals: [
@@ -697,6 +705,514 @@ export const ROLES = [
       ]),
       recovery: { [nowStr()]: 6 }
     })
+  },
+
+  {
+    id: 'doctor',
+    name: 'Doctor',
+    emoji: '🩺',
+    icon: 'stethoscope',
+    accent: '#0891b2',
+    image: '/img/roles/doctor.jpg',
+    tagline: 'Save time for patients, not paperwork. Track rounds, clinics and care plans.',
+    desc: 'Patient rounds, appointment book, treatment pipelines, and daily patient counters.',
+    goals: [
+      'Complete morning rounds on time',
+      'Review every lab result same-day',
+      'Keep charts updated after each consult',
+      'Book follow-ups before discharge',
+      'Stay within clinic hours'
+    ],
+    dockApps: ['dashboard', 'calendar', 'habits', 'capture', 'pomodoro'],
+    features: [
+      {
+        id: 'rounds',
+        title: 'Patient Rounds',
+        icon: 'bed',
+        type: 'list',
+        color: 'primary',
+        desc: 'Log each patient seen during rounds.',
+        fields: [
+          { key: 'text', label: 'Patient', type: 'text' },
+          { key: 'ward', label: 'Ward / Unit', type: 'text' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'appointments',
+        title: 'Clinic Book',
+        icon: 'event_available',
+        type: 'list',
+        color: 'secondary',
+        desc: 'Schedule consults and procedures.',
+        fields: [
+          { key: 'text', label: 'Patient', type: 'text' },
+          { key: 'reason', label: 'Reason', type: 'text' },
+          { key: 'date', label: 'Date', type: 'date' },
+          { key: 'time', label: 'Time', type: 'time' }
+        ]
+      },
+      {
+        id: 'care-plans',
+        title: 'Care Plans',
+        icon: 'vaccines',
+        type: 'kanban',
+        color: 'tertiary',
+        desc: 'Move patients from diagnosed to recovered.',
+        columns: ['Diagnosed', 'Treating', 'Recovered']
+      },
+      {
+        id: 'patients',
+        title: 'Daily Patients',
+        icon: 'group',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Count consults handled each day.',
+        counterLabel: 'Patients',
+        unit: 'seen',
+        target: 12
+      }
+    ],
+    seed: () => ({
+      rounds: mkList('round', [
+        { text: 'Amara Singh — post-op', ward: 'Ward 4B', date: d(0) },
+        { text: 'Diego Reyes — fever workup', ward: 'ICU', date: d(0) },
+        { text: 'Priya Nair — diabetes review', ward: 'OPD', date: d(0) }
+      ]),
+      appointments: mkList('apt', [
+        { text: 'Jonas Weber', reason: 'Annual physical', date: d(1), time: '09:30' },
+        { text: 'Lena Fischer', reason: 'Echocardiogram results', date: d(2), time: '11:00' }
+      ]),
+      'care-plans': [
+        { id: uid('care'), title: 'Recurrent migraines', status: 0 },
+        { id: uid('care'), title: 'Hypertension management', status: 1 },
+        { id: uid('care'), title: 'Sprained ankle — rehab', status: 2 }
+      ],
+      patients: { [nowStr()]: 9 }
+    })
+  },
+
+  {
+    id: 'lawyer',
+    name: 'Lawyer',
+    emoji: '⚖️',
+    icon: 'balance',
+    accent: '#4f46e5',
+    image: '/img/roles/lawyer.jpg',
+    tagline: 'Win the case file by file. Track briefs, deadlines and billable hours.',
+    desc: 'Case files, court dates, billable hour tracking, and a case pipeline.',
+    goals: [
+      'Never miss a filing deadline',
+      'Bill every hour worked',
+      'Prep case files 48h before court',
+      'Keep client communication current',
+      'Close cases on schedule'
+    ],
+    dockApps: ['dashboard', 'calendar', 'capture', 'habits', 'pomodoro'],
+    features: [
+      {
+        id: 'cases',
+        title: 'Case Files',
+        icon: 'folder_special',
+        type: 'list',
+        color: 'primary',
+        desc: 'Track open matters and key dates.',
+        fields: [
+          { key: 'text', label: 'Case', type: 'text' },
+          { key: 'client', label: 'Client', type: 'text' },
+          { key: 'date', label: 'Next deadline', type: 'date' }
+        ]
+      },
+      {
+        id: 'court',
+        title: 'Court Appearances',
+        icon: 'gavel',
+        type: 'list',
+        color: 'secondary',
+        desc: 'Hearings, filings and appearances.',
+        fields: [
+          { key: 'text', label: 'Matter', type: 'text' },
+          { key: 'court', label: 'Court', type: 'text' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'pipeline',
+        title: 'Matter Pipeline',
+        icon: 'account_tree',
+        type: 'kanban',
+        color: 'tertiary',
+        desc: 'Intake → preparation → court → closed.',
+        columns: ['Intake', 'Preparing', 'In Court', 'Closed']
+      },
+      {
+        id: 'billable',
+        title: 'Billable Hours',
+        icon: 'hourglass_top',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Hours billed today across matters.',
+        counterLabel: 'Hours',
+        unit: 'hrs',
+        target: 6
+      }
+    ],
+    seed: () => ({
+      cases: mkList('case', [
+        { text: 'Hartley v. Northwood', client: 'Hartley & Co.', date: d(5) },
+        { text: 'Contract dispute — Meridian', client: 'Meridian Labs', date: d(12) },
+        { text: 'Estate of R. Patel', client: 'Patel family', date: d(9) }
+      ]),
+      court: mkList('hearing', [
+        { text: 'Motion to dismiss', court: 'District 7', date: d(3) },
+        { text: 'Discovery conference', court: 'Chambers', date: d(6) }
+      ]),
+      pipeline: [
+        { id: uid('matter'), title: 'Acme trademark renewal', status: 0 },
+        { id: uid('matter'), title: 'Employment mediation', status: 1 },
+        { id: uid('matter'), title: 'Lease dispute hearing', status: 2 },
+        { id: uid('matter'), title: 'Settlement — Vega case', status: 3 }
+      ],
+      billable: { [nowStr()]: 3.5 }
+    })
+  },
+
+  {
+    id: 'chef',
+    name: 'Chef',
+    emoji: '👨‍🍳',
+    icon: 'restaurant',
+    accent: '#d97706',
+    image: '/img/roles/chef.jpg',
+    tagline: 'Design menus, track stock, and plate perfection. Every service, every day.',
+    desc: 'Recipe library, menu pipeline, ingredient stock, and dishes-served counters.',
+    goals: [
+      'Prep mise en place before service',
+      'Rotate menu with seasonal stock',
+      'Plate consistently every service',
+      'Keep inventory waste under 5%',
+      'Master one new dish weekly'
+    ],
+    dockApps: ['dashboard', 'calendar', 'habits', 'capture', 'pomodoro'],
+    features: [
+      {
+        id: 'recipes',
+        title: 'Recipe Library',
+        icon: 'menu_book',
+        type: 'list',
+        color: 'primary',
+        desc: 'Catalog dishes, cuisines and prep times.',
+        fields: [
+          { key: 'text', label: 'Dish', type: 'text' },
+          { key: 'cuisine', label: 'Cuisine', type: 'text' },
+          { key: 'time', label: 'Prep time (min)', type: 'number' }
+        ]
+      },
+      {
+        id: 'menu',
+        title: 'Menu Pipeline',
+        icon: 'restaurant_menu',
+        type: 'kanban',
+        color: 'secondary',
+        desc: 'Ideas → tested → on menu.',
+        columns: ['Ideas', 'Testing', 'On Menu']
+      },
+      {
+        id: 'stock',
+        title: 'Ingredient Stock',
+        icon: 'inventory_2',
+        type: 'list',
+        color: 'tertiary',
+        desc: 'Keep the pantry tracked and topped up.',
+        fields: [
+          { key: 'text', label: 'Ingredient', type: 'text' },
+          { key: 'qty', label: 'Quantity', type: 'number' },
+          { key: 'unit', label: 'Unit', type: 'text' }
+        ]
+      },
+      {
+        id: 'covers',
+        title: 'Covers Served',
+        icon: 'table_restaurant',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Plates out of the kitchen today.',
+        counterLabel: 'Covers',
+        unit: 'plates',
+        target: 40
+      }
+    ],
+    seed: () => ({
+      recipes: mkList('recipe', [
+        { text: 'Risotto al funghi', cuisine: 'Italian', time: 45 },
+        { text: 'Miso-glazed salmon', cuisine: 'Japanese', time: 30 },
+        { text: 'Tiramisu', cuisine: 'Italian', time: 60 }
+      ]),
+      menu: [
+        { id: uid('dish'), title: 'Heirloom tomato tart', status: 0 },
+        { id: uid('dish'), title: 'Charred broccoli hummus', status: 1 },
+        { id: uid('dish'), title: 'Basque cheesecake', status: 2 }
+      ],
+      stock: mkList('stock', [
+        { text: 'Risotto rice', qty: 12, unit: 'kg' },
+        { text: 'Heirloom tomatoes', qty: 30, unit: 'pcs' },
+        { text: 'Crème fraîche', qty: 6, unit: 'tub' }
+      ]),
+      covers: { [nowStr()]: 28 }
+    })
+  },
+
+  {
+    id: 'photographer',
+    name: 'Photographer',
+    emoji: '📸',
+    icon: 'photo_camera',
+    accent: '#9333ea',
+    image: '/img/roles/photographer.jpg',
+    tagline: 'Capture briefs, edit galleries, and build a portfolio that books clients.',
+    desc: 'Shoot schedule, portfolio pipeline, gear log, and shots-taken counters.',
+    goals: [
+      'Deliver galleries within 72 hours',
+      'Back up every memory card',
+      'Shoot weekly for the portfolio',
+      'Book 4+ shoots a month',
+      'Keep gear serviced and ready'
+    ],
+    dockApps: ['dashboard', 'calendar', 'capture', 'habits', 'pomodoro'],
+    features: [
+      {
+        id: 'shoots',
+        title: 'Shoot Schedule',
+        icon: 'event',
+        type: 'list',
+        color: 'primary',
+        desc: 'Bookings, locations and clients.',
+        fields: [
+          { key: 'text', label: 'Shoot', type: 'text' },
+          { key: 'client', label: 'Client', type: 'text' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'portfolio',
+        title: 'Portfolio Pipeline',
+        icon: 'auto_awesome_mosaic',
+        type: 'kanban',
+        color: 'secondary',
+        desc: 'Raw → edited → published.',
+        columns: ['Raw', 'Editing', 'Published']
+      },
+      {
+        id: 'gear',
+        title: 'Gear Log',
+        icon: 'camera',
+        type: 'list',
+        color: 'tertiary',
+        desc: 'Lenses, bodies and their condition.',
+        fields: [
+          { key: 'text', label: 'Gear', type: 'text' },
+          { key: 'status', label: 'Condition', type: 'text' }
+        ]
+      },
+      {
+        id: 'shots',
+        title: 'Shots Taken',
+        icon: 'photo_library',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Keepalive — keep shooting daily.',
+        counterLabel: 'Shots',
+        unit: 'shots',
+        target: 100
+      }
+    ],
+    seed: () => ({
+      shoots: mkList('shoot', [
+        { text: 'Golden hour portraits', client: 'Maya Chen', date: d(1) },
+        { text: 'Product line — skincare', client: 'Lumina Co.', date: d(4) },
+        { text: 'Wedding — Riverside Estate', client: 'Alvarez family', date: d(9) }
+      ]),
+      portfolio: [
+        { id: uid('shot'), title: 'Street neon series', status: 0 },
+        { id: uid('shot'), title: 'Minimal still life', status: 1 },
+        { id: uid('shot'), title: 'Coastal long exposure', status: 2 }
+      ],
+      gear: mkList('gear', [
+        { text: 'Sony A7 IV', status: 'Excellent' },
+        { text: '85mm f/1.4', status: 'Good' },
+        { text: '28-70mm kit', status: 'Service due' }
+      ]),
+      shots: { [nowStr()]: 64 }
+    })
+  },
+
+  {
+    id: 'musician',
+    name: 'Musician',
+    emoji: '🎸',
+    icon: 'music_note',
+    accent: '#db2777',
+    image: '/img/roles/musician.jpg',
+    tagline: 'From riff to release. Log rehearsals, write songs and protect the practice streak.',
+    desc: 'Rehearsal log, songwriting pipeline, practice sessions, and daily practice counters.',
+    goals: [
+      'Practice every single day',
+      'Finish one song a month',
+      'Learn a new technique weekly',
+      'Rehearse for gigs on schedule',
+      'Record a demo before release'
+    ],
+    dockApps: ['dashboard', 'calendar', 'capture', 'habits', 'pomodoro'],
+    features: [
+      {
+        id: 'rehearsals',
+        title: 'Rehearsal Log',
+        icon: 'mic',
+        type: 'list',
+        color: 'primary',
+        desc: 'Band practices and soundchecks.',
+        fields: [
+          { key: 'text', label: 'Session', type: 'text' },
+          { key: 'duration', label: 'Minutes', type: 'number' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'songs',
+        title: 'Songwriting',
+        icon: 'music_note',
+        type: 'kanban',
+        color: 'secondary',
+        desc: 'Idea → writing → recording → released.',
+        columns: ['Idea', 'Writing', 'Recording', 'Released']
+      },
+      {
+        id: 'practice',
+        title: 'Practice Sessions',
+        icon: 'graphic_eq',
+        type: 'list',
+        color: 'tertiary',
+        desc: 'What you drilled and for how long.',
+        fields: [
+          { key: 'text', label: 'Skill / Piece', type: 'text' },
+          { key: 'minutes', label: 'Minutes', type: 'number' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'practice-streak',
+        title: 'Practice Streak',
+        icon: 'local_fire_department',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Minutes of focused practice today.',
+        counterLabel: 'Minutes',
+        unit: 'min',
+        target: 60
+      }
+    ],
+    seed: () => ({
+      rehearsals: mkList('reh', [
+        { text: 'Full band — setlist 1', duration: 90, date: d(0) },
+        { text: 'Vocal + keys harmony', duration: 45, date: d(1) }
+      ]),
+      songs: [
+        { id: uid('song'), title: 'Midnight Motorway', status: 0 },
+        { id: uid('song'), title: 'Paper Planes', status: 1 },
+        { id: uid('song'), title: 'Slow Burn', status: 2 },
+        { id: uid('song'), title: 'City Lights', status: 3 }
+      ],
+      practice: mkList('prac', [
+        { text: 'Minor pentatonic runs', minutes: 25, date: d(0) },
+        { text: 'Fingerpicking pattern 2', minutes: 20, date: d(0) }
+      ]),
+      'practice-streak': { [nowStr()]: 45 }
+    })
+  },
+
+  {
+    id: 'nurse',
+    name: 'Nurse',
+    emoji: '👩‍⚕️',
+    icon: 'health_and_safety',
+    accent: '#0ea5e9',
+    image: '/img/roles/nurse.jpg',
+    tagline: 'Deliver compassionate care with zero missed steps. Rounds, meds, handover.',
+    desc: 'Shift rounds, medication schedules, handover notes, and daily steps counters.',
+    goals: [
+      'Complete all handover notes on shift',
+      'Administer meds on schedule',
+      'Check vitals for every patient',
+      'Chart before you forget',
+      'Stay hydrated and moving'
+    ],
+    dockApps: ['dashboard', 'calendar', 'habits', 'capture', 'pomodoro'],
+    features: [
+      {
+        id: 'rounds',
+        title: 'Shift Rounds',
+        icon: 'bed',
+        type: 'list',
+        color: 'primary',
+        desc: 'Patient checks during your shift.',
+        fields: [
+          { key: 'text', label: 'Patient', type: 'text' },
+          { key: 'ward', label: 'Ward', type: 'text' },
+          { key: 'date', label: 'Date', type: 'date' }
+        ]
+      },
+      {
+        id: 'meds',
+        title: 'Medication Schedule',
+        icon: 'medication',
+        type: 'list',
+        color: 'secondary',
+        desc: 'Who, what, and when.',
+        fields: [
+          { key: 'text', label: 'Patient', type: 'text' },
+          { key: 'med', label: 'Medication', type: 'text' },
+          { key: 'time', label: 'Time', type: 'time' }
+        ]
+      },
+      {
+        id: 'handover',
+        title: 'Handover Notes',
+        icon: 'note_alt',
+        type: 'kanban',
+        color: 'tertiary',
+        desc: 'Shift start → in progress → handed over.',
+        columns: ['Shift Start', 'In Progress', 'Handed Over']
+      },
+      {
+        id: 'steps',
+        title: 'Steps Walked',
+        icon: 'directions_walk',
+        type: 'counters',
+        color: 'primary',
+        desc: 'Keep moving — track daily steps.',
+        counterLabel: 'Steps',
+        unit: 'steps',
+        target: 10000
+      }
+    ],
+    seed: () => ({
+      rounds: mkList('nround', [
+        { text: 'Victor Lee — vitals', ward: 'Ward 3A', date: d(0) },
+        { text: 'Sofia Marino — wound care', ward: 'Ward 3B', date: d(0) },
+        { text: 'Marcus Adeyemi — post-op', ward: 'Ward 2A', date: d(0) }
+      ]),
+      meds: mkList('med', [
+        { text: 'Victor Lee', med: 'Metformin 500mg', time: '08:00' },
+        { text: 'Sofia Marino', med: 'Amoxicillin 250mg', time: '09:00' },
+        { text: 'Marcus Adeyemi', med: 'Paracetamol 1g', time: '10:00' }
+      ]),
+      handover: [
+        { id: uid('hand'), title: 'Night shift notes — Ward 3', status: 0 },
+        { id: uid('hand'), title: 'IV lines check', status: 1 },
+        { id: uid('hand'), title: 'Lab results follow-up', status: 2 }
+      ],
+      steps: { [nowStr()]: 7400 }
+    })
   }
 ];
 
@@ -721,7 +1237,13 @@ export const WALLPAPERS = [
   { id: 'wall-3', name: 'Calm Peaks', path: '/wallpapers/wall-3.jpg' },
   { id: 'wall-4', name: 'Mono Still', path: '/wallpapers/wall-4.jpg' },
   { id: 'wall-5', name: 'Quiet Dunes', path: '/wallpapers/wall-5.jpg' },
-  { id: 'wall-6', name: 'Forest Haze', path: '/wallpapers/wall-6.jpg' }
+  { id: 'wall-6', name: 'Forest Haze', path: '/wallpapers/wall-6.jpg' },
+  { id: 'wall-7', name: 'Abstract Bloom', path: '/wallpapers/wall-7.jpg' },
+  { id: 'wall-8', name: 'Alpine Edge', path: '/wallpapers/wall-8.jpg' },
+  { id: 'wall-9', name: 'Glacier Lake', path: '/wallpapers/wall-9.jpg' },
+  { id: 'wall-10', name: 'Mist Valley', path: '/wallpapers/wall-10.jpg' },
+  { id: 'wall-11', name: 'Fern Light', path: '/wallpapers/wall-11.jpg' },
+  { id: 'wall-12', name: 'Vivid Swirl', path: '/wallpapers/wall-12.jpg' }
 ];
 
 export const getWallpaper = (id) => WALLPAPERS.find(w => w.id === id) || WALLPAPERS[0];
@@ -781,5 +1303,11 @@ export const THEME_PRESETS = [
   { id: 'theme-sunset-orange', name: 'Ember Orange', accent: '#ea580c' },
   { id: 'theme-royal-purple', name: 'Royal Purple', accent: '#7c3aed' },
   { id: 'theme-sweet-rose', name: 'Rose Petal', accent: '#e11d48' },
-  { id: 'theme-teal', name: 'Lagoon Teal', accent: '#0d9488' }
+  { id: 'theme-teal', name: 'Lagoon Teal', accent: '#0d9488' },
+  { id: 'theme-cyber-pink', name: 'Cyber Pink', accent: '#db2777' },
+  { id: 'theme-amber-gold', name: 'Amber Gold', accent: '#f59e0b' },
+  { id: 'theme-mint-aqua', name: 'Mint Aqua', accent: '#10b981' },
+  { id: 'theme-berry', name: 'Berry Red', accent: '#e11d48' },
+  { id: 'theme-navy-slate', name: 'Navy Slate', accent: '#3b82f6' },
+  { id: 'theme-lavender', name: 'Lavender', accent: '#8b5cf6' }
 ];
