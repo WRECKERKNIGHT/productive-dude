@@ -81,6 +81,12 @@ const DEPTH_LAYERS = [
   { img: '/img/hero/slide-planning.jpg', factor: 52, scale: 1.24, speed: 3 }
 ];
 
+// Kinetic typography: the hero headline behaves like elastic material. Fast
+// scroll stretches words horizontally + skews them; momentum decay pulls them
+// back to rest, while a slow scroll parallax drifts the whole lockup upward.
+const KINETIC_LINE_1 = ['Reclaim', 'your', 'focus,'];
+const KINETIC_LINE_2 = ['master', 'your', 'craft.'];
+
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
   const rootRef = useRef(null);
@@ -93,6 +99,43 @@ export default function LandingPage({ onStart }) {
   const clipCircleRef = useRef(null);
   const parallaxRef = useRef(null);
   const parallaxLayersRef = useRef([]);
+  const heroParallaxRef = useRef(null);
+  const heroWordsRef = useRef([]);
+
+  // Kinetic typography: elastic word stretch + skew driven by scroll velocity,
+  // with a slow upward drift from the hero's own scroll progress.
+  useEffect(() => {
+    const root = rootRef.current;
+    const wrapper = heroParallaxRef.current;
+    const words = heroWordsRef.current;
+    if (!root || !wrapper || words.length === 0) return;
+
+    const smooth = { x: 0, skew: 0 };
+    let raf = 0;
+
+    const tick = () => {
+      const { scroll, velocity } = engineRef.current;
+      const heroP = Math.min(Math.max(scroll / Math.max(root.clientHeight, 1), 0), 1);
+
+      const targetX = Math.min(Math.abs(velocity) * 0.055, 0.42);
+      const targetSkew = Math.max(Math.min(velocity * 1.2, 12), -12);
+      smooth.x += (targetX - smooth.x) * 0.09;
+      smooth.skew += (targetSkew - smooth.skew) * 0.09;
+
+      words.forEach((w, i) => {
+        const lag = Math.max(0, smooth.x - i * 0.012);
+        w.style.transform = `scaleX(${1 + lag}) skewX(${smooth.skew * 0.6}deg)`;
+      });
+
+      wrapper.style.transform = `translate3d(0, ${heroP * -70}px, 0)`;
+      wrapper.style.opacity = `${1 - heroP * 0.6}`;
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   // 2.5D depth parallax: three photo planes drift at different rates and smear
   // with scroll velocity, settling back into place when motion stops.
@@ -418,10 +461,24 @@ export default function LandingPage({ onStart }) {
                 The Spatial Life Operating System
               </span>
             </div>
-            <h1 className="reveal reveal-delay-1 font-classic text-[54px] md:text-[76px] leading-[1.02] text-white">
-              Reclaim your focus,<br />
-              <span className="italic" style={{ color: 'var(--primary)' }}>master your craft.</span>
-            </h1>
+            <div ref={heroParallaxRef} className="will-change-transform">
+              <h1 className="reveal reveal-delay-1 font-classic text-[54px] md:text-[76px] leading-[1.02] text-white">
+                <span className="block whitespace-nowrap">
+                  {KINETIC_LINE_1.map((w) => (
+                    <span key={w} ref={(el) => { if (el) heroWordsRef.current.push(el); }} className="inline-block will-change-transform">
+                      {w}&nbsp;
+                    </span>
+                  ))}
+                </span>
+                <span className="block whitespace-nowrap italic" style={{ color: 'var(--primary)' }}>
+                  {KINETIC_LINE_2.map((w) => (
+                    <span key={w} ref={(el) => { if (el) heroWordsRef.current.push(el); }} className="inline-block will-change-transform">
+                      {w}&nbsp;
+                    </span>
+                  ))}
+                </span>
+              </h1>
+            </div>
             <p className="reveal reveal-delay-2 mt-6 text-white/80 text-lg md:text-xl font-medium max-w-xl leading-relaxed">
               A curated personal OS that grows with your career — planner, syllabus, habits,
               Pomodoro, notes and analytics in one beautifully themed workspace.
