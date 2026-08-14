@@ -73,6 +73,14 @@ const REVEAL_LINES = [
   { text: 'Your rules.', accent: true }
 ];
 
+// 2.5D depth parallax: layered stock photography where each plane reacts to both
+// scroll position (parallax) and scroll velocity (smear), faking real focal depth.
+const DEPTH_LAYERS = [
+  { img: '/img/misc/workspace.jpg', factor: 14, scale: 1.22, speed: 1 },
+  { img: '/img/misc/team-collab.jpg', factor: 30, scale: 1.18, speed: 2 },
+  { img: '/img/hero/slide-planning.jpg', factor: 52, scale: 1.24, speed: 3 }
+];
+
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
   const rootRef = useRef(null);
@@ -83,6 +91,41 @@ export default function LandingPage({ onStart }) {
   const assemblyStageRef = useRef(null);
   const clipRef = useRef(null);
   const clipCircleRef = useRef(null);
+  const parallaxRef = useRef(null);
+  const parallaxLayersRef = useRef([]);
+
+  // 2.5D depth parallax: three photo planes drift at different rates and smear
+  // with scroll velocity, settling back into place when motion stops.
+  useEffect(() => {
+    const root = rootRef.current;
+    const section = parallaxRef.current;
+    if (!root || !section) return;
+
+    let raf = 0;
+
+    const tick = () => {
+      const { scroll, velocity } = engineRef.current;
+      const sectionTop = section.offsetTop;
+      const travel = section.offsetHeight - root.clientHeight;
+      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
+      const center = p - 0.5;
+
+      parallaxLayersRef.current.forEach((el, i) => {
+        if (!el) return;
+        const layer = DEPTH_LAYERS[i];
+        const base = center * -layer.factor;
+        const nudge = layer.speed * velocity * 1.4;
+        const smear = Math.abs(velocity) * 0.25;
+        el.style.transform = `translate3d(0, ${base + nudge}px, 0) scale(${layer.scale})`;
+        el.style.filter = `blur(${Math.min(smear, 6)}px) saturate(${1 + Math.min(Math.abs(velocity) * 0.01, 0.2)})`;
+      });
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   // Velocity-safe clip-path reveal: circle diameter + per-line insets are driven
   // directly by scroll progress of the pinned section.
@@ -658,6 +701,53 @@ export default function LandingPage({ onStart }) {
             <p className="tm-line mt-6 text-white/75 text-lg font-medium max-w-lg mx-auto leading-relaxed">
               Scroll keeps moving — the circle opens, the words arrive, the promise lands.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== SLIDE — 2.5D DEPTH PARALLAX ===================== */}
+      <section ref={parallaxRef} className="relative" style={{ height: '260vh' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-background" />
+          <div className="absolute inset-0 grid-pattern opacity-25" />
+
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="text-left order-2 lg:order-1">
+              <span className="reveal px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
+                2.5D Depth Parallax
+              </span>
+              <h2 className="reveal reveal-delay-1 font-classic text-[40px] md:text-[54px] mt-4">
+                Photos with <span className="italic" style={{ color: 'var(--secondary)' }}>real depth.</span>
+              </h2>
+              <p className="reveal reveal-delay-2 text-on-surface-variant text-base md:text-lg font-medium mt-4 leading-relaxed">
+                Each layer of the scene drifts at its own pace, and blurs with your scroll
+                momentum — flattening the moment you stop. No WebGL required.
+              </p>
+              <div className="reveal reveal-delay-3 flex flex-wrap gap-3 mt-6">
+                {['Scroll parallax', 'Velocity smear', 'Zero shaders'].map((chip, i) => (
+                  <span key={chip} className="sticker px-3 py-1.5 rounded-xl text-[10px] font-extrabold text-white shadow-hard" style={{ backgroundColor: 'var(--secondary)', transform: `rotate(${(i % 3) - 1}deg)` }}>
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative order-1 lg:order-2 rounded-3xl overflow-hidden shadow-hard-lg toon-card" style={{ height: 'min(70vh, 480px)' }}>
+              {DEPTH_LAYERS.map((layer, i) => (
+                <img
+                  key={layer.img}
+                  ref={(el) => { parallaxLayersRef.current[i] = el; }}
+                  src={layer.img}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover will-change-transform"
+                  style={{ scale: layer.scale }}
+                />
+              ))}
+              <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 0 2px var(--secondary)', borderRadius: 'inherit' }} />
+              <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur text-white text-[10px] font-bold font-mono uppercase tracking-widest">
+                3 planes · {DEPTH_LAYERS.length} depth layers
+              </div>
+            </div>
           </div>
         </div>
       </section>
