@@ -48,12 +48,91 @@ const HORIZONTAL_PANELS = [
   { n: '06', icon: 'rocket_launch', title: 'Ship', desc: 'End the day knowing exactly what you shipped.', img: '/img/misc/workspace.jpg', accent: 'theme-navy-slate' }
 ];
 
+// Pinned scroll timeline: a central product "assembles" as scroll progress moves
+// from 0 → 100%, mirroring Apple-style pinned frame reveals without a canvas.
+const ASSEMBLY_PARTS = [
+  { icon: 'bolt', label: 'Life OS core', dx: 0, dy: 0, rot: 0, size: 'text-[64px]', accent: 'theme-sweet-rose' },
+  { icon: 'check_circle', label: 'Tasks', dx: -260, dy: -170, rot: -32, size: 'text-[30px]', accent: 'theme-forest-green' },
+  { icon: 'local_fire_department', label: 'Habits', dx: 250, dy: -190, rot: 26, size: 'text-[30px]', accent: 'theme-sunset-orange' },
+  { icon: 'timer', label: 'Focus', dx: -280, dy: 150, rot: -18, size: 'text-[30px]', accent: 'theme-royal-purple' },
+  { icon: 'monitoring', label: 'Analytics', dx: 250, dy: 160, rot: 38, size: 'text-[30px]', accent: 'theme-teal' },
+  { icon: 'music_note', label: 'Sound', dx: 0, dy: -250, rot: 12, size: 'text-[30px]', accent: 'theme-cyber-pink' }
+];
+
+const ASSEMBLY_STEPS = [
+  { title: 'Pick your role', desc: 'Claim your craft from 14 real careers.', start: 0.0, end: 0.33 },
+  { title: 'Load your tools', desc: 'Features snap into place around your Life OS.', start: 0.33, end: 0.66 },
+  { title: 'Enter Life OS', desc: 'Your dashboard, dock and analytics come online.', start: 0.66, end: 1.0 }
+];
+
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
   const rootRef = useRef(null);
   const engineRef = useRef({ scroll: 0, max: 0, velocity: 0 });
   const horizontalRef = useRef(null);
   const horizontalTrackRef = useRef(null);
+  const assemblyRef = useRef(null);
+  const assemblyStageRef = useRef(null);
+
+  // Pinned scroll timeline: assembly parts converge + stage rotates on scroll
+  // progress; milestone text panels crossfade at thresholds.
+  useEffect(() => {
+    const root = rootRef.current;
+    const section = assemblyRef.current;
+    const stage = assemblyStageRef.current;
+    if (!root || !section || !stage) return;
+
+    const parts = Array.from(stage.querySelectorAll('.tm-part'));
+    const panels = Array.from(stage.querySelectorAll('.tm-panel'));
+    const bar = stage.querySelector('.tm-bar');
+    const counter = stage.querySelector('.tm-counter');
+
+    let raf = 0;
+    let lastP = -1;
+
+    const tick = () => {
+      const { scroll, velocity } = engineRef.current;
+      const sectionTop = section.offsetTop;
+      const travel = section.offsetHeight - root.clientHeight;
+      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
+
+      const ease = p * p * (3 - 2 * p);
+      const settle = Math.abs(p - lastP) < 0.001 && Math.abs(velocity) < 0.2;
+      lastP = p;
+
+      parts.forEach((part, i) => {
+        const cfg = ASSEMBLY_PARTS[i];
+        const sx = (1 - ease) * cfg.dx;
+        const sy = (1 - ease) * cfg.dy;
+        const rot = (1 - ease) * cfg.rot;
+        const back = (1 - ease) * 60;
+        const scale = 0.55 + 0.45 * ease;
+        part.style.transform = `translate(${sx}px, ${sy}px) rotate(${rot}deg) rotateY(${back}deg) scale(${scale})`;
+        part.style.opacity = ease > 0.02 ? Math.min(1, ease * 4) : 0;
+      });
+
+      const spin = settle ? lastP * 360 : ease * 360;
+      stage.style.transform = `rotateX(${ease * -8}deg) rotateY(${spin}deg)`;
+      stage.style.filter = settle ? 'none' : `blur(${(1 - ease) * 2}px)`;
+
+      if (bar) bar.style.transform = `scaleY(${ease})`;
+      if (counter) counter.textContent = `${Math.round(ease * 100)}%`;
+
+      panels.forEach((panel) => {
+        const step = ASSEMBLY_STEPS[Number(panel.dataset.i)];
+        const local = (p - step.start) / (step.end - step.start);
+        const show = Math.min(Math.max(local, 0), 1);
+        panel.style.opacity = show;
+        panel.style.transform = `translateY(${(1 - show) * 24}px)`;
+        panel.style.visibility = show > 0 ? 'visible' : 'hidden';
+      });
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   // Horizontal track lock: vertical scroll maps to horizontal travel across the
   // pinned gallery, with a velocity skew that settles back to zero when stopped.
@@ -438,6 +517,69 @@ export default function LandingPage({ onStart }) {
             <div className="shrink-0 px-8 text-on-surface-variant">
               <span className="material-symbols-outlined text-[42px]" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== SLIDE — PINNED SCROLL TIMELINE ===================== */}
+      <section ref={assemblyRef} className="relative" style={{ height: '320vh' }}>
+        <div ref={assemblyStageRef} className="sticky top-0 h-screen flex items-center justify-center overflow-hidden" style={{ transformStyle: 'preserve-3d' }}>
+          <div className="absolute inset-0 bg-background" />
+          <div className="absolute inset-0 dots-pattern opacity-30" />
+          <div className="orb orb-float top-[-15%] left-[-10%] w-[38vw] h-[38vw]" style={{ backgroundColor: 'var(--secondary)' }} />
+          <div className="orb orb-float bottom-[-20%] right-[-8%] w-[42vw] h-[42vw]" style={{ backgroundColor: 'var(--primary)', animationDelay: '-7s' }} />
+
+          {/* Progress column */}
+          <div className="absolute left-5 md:left-10 top-1/2 -translate-y-1/2 z-20 flex items-center gap-3">
+            <div className="w-1 h-40 md:h-56 bg-surface-container rounded-full overflow-hidden relative">
+              <div className="tm-bar absolute inset-0 bg-primary origin-top" style={{ transform: 'scaleY(0)' }} />
+            </div>
+            <div className="text-left">
+              <div className="tm-counter font-mono text-[22px] md:text-[30px] font-extrabold text-primary tabular-nums">0%</div>
+              <div className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Assembling</div>
+            </div>
+          </div>
+
+          {/* Assembly stage */}
+          <div className="relative z-10 w-[300px] h-[300px] md:w-[380px] md:h-[380px]" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/25" style={{ animation: 'spin-slow 30s linear infinite' }} />
+            <div className="absolute inset-8 rounded-full border border-secondary/20" />
+
+            {ASSEMBLY_PARTS.map((part) => (
+              <div
+                key={part.label}
+                className={`tm-part absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform`}
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div
+                  className="toon-card flex flex-col items-center justify-center gap-1 rounded-2xl shadow-hard px-4 py-3"
+                  style={{ borderColor: getThemeAccent(part.accent), width: '110px' }}
+                >
+                  <span className={`material-symbols-outlined ${part.size}`} style={{ color: getThemeAccent(part.accent), fontVariationSettings: "'FILL' 1" }}>
+                    {part.icon}
+                  </span>
+                  <span className="text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant">{part.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Milestone panels */}
+          <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-2xl">
+            {ASSEMBLY_STEPS.map((step, i) => (
+              <div
+                key={step.title}
+                data-i={i}
+                className="tm-panel absolute inset-x-0 toon-card rounded-2xl p-4 md:p-5 shadow-hard bg-white/95 dark:bg-black/40 text-center"
+                style={{ opacity: 0, visibility: 'hidden' }}
+              >
+                <div className="font-mono text-[10px] font-bold text-primary uppercase tracking-widest mb-1">
+                  {String(i + 1).padStart(2, '0')} / {String(ASSEMBLY_STEPS.length).padStart(2, '0')}
+                </div>
+                <div className="font-headline font-extrabold text-lg md:text-xl">{step.title}</div>
+                <div className="text-[11px] text-on-surface-variant font-medium mt-1">{step.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

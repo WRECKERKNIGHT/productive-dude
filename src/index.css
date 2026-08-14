@@ -1367,3 +1367,9 @@ html {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+
+/* Slow decorative orbit ring */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
