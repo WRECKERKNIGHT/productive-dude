@@ -414,25 +414,25 @@ export default function LandingPage({ onStart }) {
     return () => io.disconnect();
   }, []);
 
-  // Track the active slide on the progress rail
+  // Track the active slide on the progress rail (driven by the lerp engine)
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const slides = root.querySelectorAll('.scroll-snap-child');
     const rails = root.querySelectorAll('.slide-rail button');
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Array.prototype.indexOf.call(slides, entry.target);
-            rails.forEach((btn, i) => btn.classList.toggle('active', i === idx));
-          }
-        });
-      },
-      { threshold: 0.55 }
-    );
-    slides.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    const counter = root.querySelector('.slide-rail .rail-counter');
+    if (slides.length === 0) return;
+    const total = slides.length;
+
+    let raf = 0;
+    const tick = () => {
+      const idx = clamp(Math.round(engineRef.current.scroll / Math.max(root.clientHeight, 1)), 0, total - 1);
+      rails.forEach((btn, i) => btn.classList.toggle('active', i === idx));
+      if (counter) counter.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   // 3D tilt on toon-cards
@@ -456,9 +456,10 @@ export default function LandingPage({ onStart }) {
   return (
     <div ref={rootRef} className="scroll-snap-y h-screen bg-background text-on-surface select-none" style={{ scrollSnapType: 'none' }}>
       <div className="slide-rail" style={{ color: 'var(--primary)' }}>
-        {['Home', 'Careers', 'The Method', 'The Suite', 'Enter'].map((label, i) => (
+        {['Home', 'Careers', 'Axis Flip', 'Assembly', 'Reveal', 'Depth', 'Method', 'Suite', 'Enter'].map((label, i) => (
           <button key={label} onClick={() => scrollToSlide(i)} title={label} aria-label={label} />
         ))}
+        <div className="rail-counter mt-2 px-2 py-1 rounded-md bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] font-extrabold text-center">01 / 09</div>
       </div>
 
       {/* ===================== SLIDE 1 — HERO ===================== */}
