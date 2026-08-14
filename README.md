@@ -1,6 +1,6 @@
-# ⚡ PRODUCTIVEDUDE — Spatial Life OS (V2.0)
+# ⚡ PRODUCTIVEDUDE — Spatial Life OS (V2.1)
 
-PRODUCTIVEDUDE is a premium, spatial productivity dashboard built for hyper-focused minds. Designed with ultra-glassmorphism, shifting radial mesh backgrounds, and smooth spring physics, it allows you to master your syllabus, block your calendar, track consistency cycles, and dump spontaneous thoughts in a frictionless inbox.
+PRODUCTIVEDUDE is a premium, spatial productivity dashboard built for hyper-focused minds. Designed with ultra-glassmorphism, 12 multicolor themes, a scroll-choreographed cinematic landing deck, and smooth lerp physics, it allows you to master your syllabus, block your calendar, track consistency cycles, and dump spontaneous thoughts in a frictionless inbox.
 
 ---
 

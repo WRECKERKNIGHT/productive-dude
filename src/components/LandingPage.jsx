@@ -539,7 +539,7 @@ export default function LandingPage({ onStart }) {
             </span>
           </div>
           <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white font-mono text-[10px] font-bold tracking-widest">
-            V2.0 · LIFE OS
+            V2.1 · SCROLL OS
           </div>
         </header>
 
