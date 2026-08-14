@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ROLES, FOCUS_WINDOWS, WORKLOADS, THEME_PRESETS, WALLPAPERS, getRole } from '../roles';
 
-const STEP_LABELS = ['Welcome', 'Your Role', 'Goals', 'Schedule', 'Appearance'];
+const STEP_LABELS = ['Welcome', 'Your Role', 'Goals', 'Schedule', 'Focus', 'Vibe', 'Appearance'];
 
 export default function OnboardingWizard({ onComplete }) {
   const [step, setStep] = useState(0);
@@ -13,6 +13,9 @@ export default function OnboardingWizard({ onComplete }) {
   const [wakeTime, setWakeTime] = useState('06:30');
   const [focusWindow, setFocusWindow] = useState('Morning');
   const [workload, setWorkload] = useState('medium');
+  const [focusSessions, setFocusSessions] = useState('2');
+  const [focusLength, setFocusLength] = useState('50');
+  const [motivation, setMotivation] = useState([]);
   const [isDark, setIsDark] = useState(true);
   const [theme, setTheme] = useState('focus-blue');
   const [wallpaper, setWallpaper] = useState('wall-1');
@@ -36,6 +39,12 @@ export default function OnboardingWizard({ onComplete }) {
     );
   };
 
+  const toggleMotivation = (m) => {
+    setMotivation(prev =>
+      prev.includes(m) ? prev.filter(x => x !== m) : prev.length < 4 ? [...prev, m] : prev
+    );
+  };
+
   const addCustomGoal = () => {
     if (!customGoal.trim() || goals.length >= 3) return;
     setGoals(prev => [...prev, customGoal.trim()]);
@@ -48,7 +57,7 @@ export default function OnboardingWizard({ onComplete }) {
     return true;
   };
 
-  const next = () => setStep(s => Math.min(s + 1, 4));
+  const next = () => setStep(s => Math.min(s + 1, 6));
   const back = () => setStep(s => Math.max(s - 1, 0));
 
   const finish = () => {
@@ -60,6 +69,9 @@ export default function OnboardingWizard({ onComplete }) {
       wakeTime,
       focusWindow,
       workload,
+      focusSessions,
+      focusLength,
+      motivation,
       theme,
       isDark,
       wallpaper,
@@ -135,7 +147,7 @@ export default function OnboardingWizard({ onComplete }) {
         <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden mb-8">
           <div
             className="h-full rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${((step + 1) / 5) * 100}%`, backgroundColor: getRole(primaryRole)?.accent || '#2563eb' }}
+            style={{ width: `${((step + 1) / 7) * 100}%`, backgroundColor: getRole(primaryRole)?.accent || '#2563eb' }}
           />
         </div>
 
@@ -310,6 +322,68 @@ export default function OnboardingWizard({ onComplete }) {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-5">
+              <div>
+                <h2 className="font-headline font-extrabold text-xl tracking-tight">How do you focus best?</h2>
+                <p className="text-on-surface-variant text-sm font-medium mt-1">
+                  These tune your Pomodoro timer and daily recommendations.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block">Deep-focus sessions per day</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[{ v: '1', n: '1', d: 'Slow & steady' }, { v: '2', n: '2', d: 'Balanced' }, { v: '3', n: '3', d: 'Ambitious' }, { v: '4', n: '4+', d: 'Deep-dive mode' }].map(o => (
+                    <button
+                      key={o.v}
+                      type="button"
+                      onClick={() => setFocusSessions(o.v)}
+                      className={`p-4 rounded-2xl border text-left transition-all active:scale-[0.98] ${
+                        focusSessions === o.v ? 'text-white' : 'text-on-surface hover:bg-surface-container'
+                      }`}
+                      style={focusSessions === o.v ? { backgroundColor: getRole(primaryRole)?.accent, borderColor: getRole(primaryRole)?.accent } : {}}
+                    >
+                      <div className="font-extrabold text-lg">{o.n}</div>
+                      <div className={`text-[11px] font-medium mt-1 ${focusSessions === o.v ? 'text-white/80' : 'text-on-surface-variant'}`}>{o.d}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block">Preferred session length</label>
+                <div className="flex flex-wrap gap-2">
+                  {[{ v: '25', n: '25 min', d: 'Classic Pomodoro' }, { v: '50', n: '50 min', d: 'Deep work' }, { v: '90', n: '90 min', d: 'Marathon' }].map(o => (
+                    <button
+                      key={o.v}
+                      type="button"
+                      onClick={() => setFocusLength(o.v)}
+                      className={`px-4 py-3 rounded-2xl border text-left transition-all active:scale-[0.98] ${
+                        focusLength === o.v ? 'text-white' : 'text-on-surface hover:bg-surface-container'
+                      }`}
+                      style={focusLength === o.v ? { backgroundColor: getRole(primaryRole)?.accent, borderColor: getRole(primaryRole)?.accent } : {}}
+                    >
+                      <div className="font-extrabold text-sm">{o.n}</div>
+                      <div className={`text-[11px] font-medium ${focusLength === o.v ? 'text-white/80' : 'text-on-surface-variant'}`}>{o.d}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className="space-y-5">
+              <div>
+                <h2 className="font-headline font-extrabold text-xl tracking-tight">What drives you?</h2>
+                <p className="text-on-surface-variant text-sm font-medium mt-1">
+                  Pick your workload and the vibes that keep you moving. Up to 4.
+                </p>
+              </div>
 
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block">How heavy is your schedule?</label>
@@ -330,10 +404,34 @@ export default function OnboardingWizard({ onComplete }) {
                   ))}
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block">Your motivation mix</label>
+                <div className="flex flex-wrap gap-2">
+                  {['Consistency over intensity', 'Growth & learning', 'Showing up for others', 'Beating yesterday', 'Deep focus flow', 'Building something lasting'].map(m => {
+                    const active = motivation.includes(m);
+                    const full = motivation.length >= 4;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => toggleMotivation(m)}
+                        disabled={!active && full}
+                        className={`px-3.5 py-2 rounded-full text-[11px] font-bold border transition-all disabled:opacity-40 ${
+                          active ? 'text-white' : 'text-on-surface-variant hover:bg-surface-container'
+                        }`}
+                        style={active ? { backgroundColor: getRole(primaryRole)?.accent, borderColor: getRole(primaryRole)?.accent } : {}}
+                      >
+                        {active && '✓ '}{m}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
 
-          {step === 4 && (
+          {step === 6 && (
             <div className="space-y-5">
               <div>
                 <h2 className="font-headline font-extrabold text-xl tracking-tight">Make it yours.</h2>
@@ -415,6 +513,7 @@ export default function OnboardingWizard({ onComplete }) {
                   <span>{selectedRoleIds.map(id => getRole(id).emoji).join(' ') || '—'}</span>
                   <span>{selectedRoleIds.map(id => getRole(id).name).join(' + ') || 'No role yet'}</span>
                   <span>Wakes {wakeTime} · {focusWindow} focus</span>
+                  <span>{focusSessions} sessions × {focusLength} min</span>
                   <span>Goal{goals.length !== 1 ? 's' : ''}: {goals.length || 'none set'}</span>
                 </div>
               </div>
@@ -430,7 +529,7 @@ export default function OnboardingWizard({ onComplete }) {
             >
               ← BACK
             </button>
-            {step < 4 ? (
+            {step < 6 ? (
               <button
                 onClick={next}
                 disabled={!canContinue()}

@@ -8,6 +8,20 @@ import Capture from './components/Capture';
 import Settings from './components/Settings';
 import Passwords from './components/Passwords';
 import Terminal from './components/Terminal';
+import OnboardingWizard from './components/OnboardingWizard';
+import RoleHub from './components/RoleHub';
+import Pomodoro from './components/Pomodoro';
+import Analytics from './components/Analytics';
+import Notes from './components/Notes';
+import Goals from './components/Goals';
+import Music from './components/Music';
+import {
+  DEFAULT_PROFILE,
+  buildEmptyRoleData,
+  seedRoleData,
+  getRole,
+  APP_META
+} from './roles';
 
 export default function App() {
   const todayStr = new Date().toISOString().split('T')[0];
@@ -35,6 +49,19 @@ export default function App() {
   // Active state tracks if user has completed the landing page
   const [hasStarted, setHasStarted] = useState(() => loadState('pd_hasStarted', false));
   const [username, setUsername] = useState(() => loadState('pd_username', 'User'));
+
+  // Role system state (profile built by the onboarding wizard)
+  const [profile, setProfile] = useState(() => ({ ...DEFAULT_PROFILE, ...loadState('pd_profile', {}) }));
+  const [roleData, setRoleData] = useState(() => {
+    const stored = loadState('pd_roleData', null);
+    return stored ? stored : buildEmptyRoleData();
+  });
+  const [roleNotes, setRoleNotes] = useState(() => loadState('pd_roleNotes', []));
+  const [roleGoals, setRoleGoals] = useState(() => loadState('pd_roleGoals', []));
+  const [pomodoroLog, setPomodoroLog] = useState(() => loadState('pd_pomodoroLog', []));
+  const [moodLog, setMoodLog] = useState(() => loadState('pd_moodLog', {}));
+  const [musicTracks, setMusicTracks] = useState([]);
+  const [expenses, setExpenses] = useState(() => loadState('pd_expenses', []));
   const [theme, setTheme] = useState(() => loadState('pd_theme', 'focus-blue'));
   const [isDark, setIsDark] = useState(() => loadState('pd_isDark', true)); // Default to sleek dark mode
 
@@ -91,7 +118,13 @@ export default function App() {
     { id: 'capture', title: 'Quick Capture Inbox', isOpen: false, isMinimized: false, isMaximized: false, x: 280, y: 230, w: 750, h: 480, zIndex: 5 },
     { id: 'settings', title: 'System Settings', isOpen: false, isMinimized: false, isMaximized: false, x: 320, y: 270, w: 750, h: 480, zIndex: 5 },
     { id: 'passwords', title: 'Passwords Vault', isOpen: false, isMinimized: false, isMaximized: false, x: 180, y: 130, w: 700, h: 460, zIndex: 5 },
-    { id: 'terminal', title: 'Modernized Terminal', isOpen: false, isMinimized: false, isMaximized: false, x: 220, y: 250, w: 680, h: 410, zIndex: 5 }
+    { id: 'terminal', title: 'Modernized Terminal', isOpen: false, isMinimized: false, isMaximized: false, x: 220, y: 250, w: 680, h: 410, zIndex: 5 },
+    { id: 'rolehub', title: 'Role Hub', isOpen: false, isMinimized: false, isMaximized: false, x: 200, y: 90, w: 780, h: 500, zIndex: 5 },
+    { id: 'pomodoro', title: 'Focus Timer', isOpen: false, isMinimized: false, isMaximized: false, x: 260, y: 150, w: 460, h: 460, zIndex: 5 },
+    { id: 'analytics', title: 'Analytics', isOpen: false, isMinimized: false, isMaximized: false, x: 300, y: 110, w: 760, h: 480, zIndex: 5 },
+    { id: 'notes', title: 'Notes', isOpen: false, isMinimized: false, isMaximized: false, x: 240, y: 120, w: 720, h: 470, zIndex: 5 },
+    { id: 'goals', title: 'Goals', isOpen: false, isMinimized: false, isMaximized: false, x: 320, y: 140, w: 720, h: 470, zIndex: 5 },
+    { id: 'music', title: 'Music', isOpen: false, isMinimized: false, isMaximized: false, x: 380, y: 170, w: 520, h: 480, zIndex: 5 }
   ]));
   const [activeWindowId, setActiveWindowId] = useState('dashboard');
   const [tilingHint, setTilingHint] = useState({ x: 0, y: 0, w: 0, h: 0, visible: false });
@@ -209,6 +242,13 @@ export default function App() {
   useEffect(() => { localStorage.setItem('pd_stageManager', JSON.stringify(stageManager)); }, [stageManager]);
   useEffect(() => { localStorage.setItem('pd_passwords', JSON.stringify(passwords)); }, [passwords]);
   useEffect(() => { localStorage.setItem('pd_desktopFolders', JSON.stringify(desktopFolders)); }, [desktopFolders]);
+  useEffect(() => { localStorage.setItem('pd_profile', JSON.stringify(profile)); }, [profile]);
+  useEffect(() => { localStorage.setItem('pd_roleData', JSON.stringify(roleData)); }, [roleData]);
+  useEffect(() => { localStorage.setItem('pd_roleNotes', JSON.stringify(roleNotes)); }, [roleNotes]);
+  useEffect(() => { localStorage.setItem('pd_roleGoals', JSON.stringify(roleGoals)); }, [roleGoals]);
+  useEffect(() => { localStorage.setItem('pd_pomodoroLog', JSON.stringify(pomodoroLog)); }, [pomodoroLog]);
+  useEffect(() => { localStorage.setItem('pd_moodLog', JSON.stringify(moodLog)); }, [moodLog]);
+  useEffect(() => { localStorage.setItem('pd_expenses', JSON.stringify(expenses)); }, [expenses]);
 
   // Apply visual theme modes to DOM elements
   useEffect(() => {
@@ -450,6 +490,32 @@ export default function App() {
     setHasStarted(true);
   };
 
+  // Onboarding wizard complete — build profile + seed role data
+  const handleOnboardingComplete = (p) => {
+    const roles = [p.primaryRole, ...p.secondaryRoles].filter(Boolean);
+    const nextProfile = { ...DEFAULT_PROFILE, ...p, onboarded: true };
+    setProfile(nextProfile);
+    setUsername(p.name || 'User');
+    setTheme(p.theme);
+    setIsDark(p.isDark);
+    setRoleData(prev => ({
+      ...buildEmptyRoleData(),
+      ...prev,
+      ...seedRoleData(roles)
+    }));
+    if (!loadState('pd_tasks', null)) {
+      setTasks([
+        { id: Date.now().toString() + 'a', title: 'Set up your first task', category: 'Personal', date: todayStr, dueTime: '09:00', completed: false }
+      ]);
+    }
+    setHasStarted(true);
+  };
+
+  const handleReRunOnboarding = () => {
+    setProfile(prev => ({ ...prev, onboarded: false }));
+    setHasStarted(false);
+  };
+
   // --- Smart Notification checker ---
   useEffect(() => {
     if (!hasStarted) return;
@@ -511,7 +577,7 @@ export default function App() {
 
   // --- settings handlers ---
   const exportData = () => {
-    const backup = { username, theme, isDark, tasks, habits, routines, subjects, exams, gpas, gradesStats, captureInbox, brainDump, dailyLogs, notifications, passwords, desktopFolders };
+    const backup = { username, theme, isDark, tasks, habits, routines, subjects, exams, gpas, gradesStats, captureInbox, brainDump, dailyLogs, notifications, passwords, desktopFolders, profile, roleData, roleNotes, roleGoals, pomodoroLog, moodLog, expenses };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
@@ -539,6 +605,13 @@ export default function App() {
     if (parsedState.notifications) setNotifications(parsedState.notifications);
     if (parsedState.passwords) setPasswords(parsedState.passwords);
     if (parsedState.desktopFolders) setDesktopFolders(parsedState.desktopFolders);
+    if (parsedState.profile) setProfile(parsedState.profile);
+    if (parsedState.roleData) setRoleData(parsedState.roleData);
+    if (parsedState.roleNotes) setRoleNotes(parsedState.roleNotes);
+    if (parsedState.roleGoals) setRoleGoals(parsedState.roleGoals);
+    if (parsedState.pomodoroLog) setPomodoroLog(parsedState.pomodoroLog);
+    if (parsedState.moodLog) setMoodLog(parsedState.moodLog);
+    if (parsedState.expenses) setExpenses(parsedState.expenses);
   };
 
   const resetAllData = () => {
@@ -560,6 +633,13 @@ export default function App() {
       setCaptureInbox([]);
       setBrainDump('// Brain Dump Scratchpad\n- Write notes or sudden lists...');
       setDailyLogs({});
+      setProfile({ ...DEFAULT_PROFILE });
+      setRoleData(buildEmptyRoleData());
+      setRoleNotes([]);
+      setRoleGoals([]);
+      setPomodoroLog([]);
+      setMoodLog({});
+      setExpenses([]);
       setHasStarted(false);
       window.location.reload();
     }
@@ -703,6 +783,10 @@ export default function App() {
               dailyLogs={dailyLogs}
               setDailyLogs={setDailyLogs}
               username={username}
+              profile={profile}
+              roleData={roleData}
+              roleGoals={roleGoals}
+              openApp={openApp}
             />
           )}
           {win.id === 'calendar' && (
@@ -752,6 +836,9 @@ export default function App() {
               importData={importData}
               resetAllData={resetAllData}
               loadTutorialDemo={loadTutorialDemo}
+              profile={profile}
+              setProfile={setProfile}
+              onReRunOnboarding={handleReRunOnboarding}
             />
           )}
           {win.id === 'passwords' && (
@@ -768,6 +855,62 @@ export default function App() {
               setTheme={setTheme}
               isDark={isDark}
               setIsDark={setIsDark}
+            />
+          )}
+          {win.id === 'rolehub' && (
+            <RoleHub
+              profile={profile}
+              roleData={roleData}
+              setRoleData={setRoleData}
+              tasks={tasks}
+              habits={habits}
+              pomodoroLog={pomodoroLog}
+              roleGoals={roleGoals}
+              setRoleGoals={setRoleGoals}
+              setPomodoroLog={setPomodoroLog}
+              openApp={openApp}
+            />
+          )}
+          {win.id === 'pomodoro' && (
+            <Pomodoro
+              pomodoroLog={pomodoroLog}
+              setPomodoroLog={setPomodoroLog}
+              openApp={openApp}
+            />
+          )}
+          {win.id === 'analytics' && (
+            <Analytics
+              tasks={tasks}
+              habits={habits}
+              roleData={roleData}
+              pomodoroLog={pomodoroLog}
+              moodLog={moodLog}
+              setMoodLog={setMoodLog}
+              profile={profile}
+              expenses={expenses}
+              setExpenses={setExpenses}
+            />
+          )}
+          {win.id === 'notes' && (
+            <Notes
+              roleNotes={roleNotes}
+              setRoleNotes={setRoleNotes}
+            />
+          )}
+          {win.id === 'goals' && (
+            <Goals
+              roleGoals={roleGoals}
+              setRoleGoals={setRoleGoals}
+              profile={profile}
+            />
+          )}
+          {win.id === 'music' && (
+            <Music
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              currentSong={currentSong}
+              setCurrentSong={setCurrentSong}
+              volume={volume}
             />
           )}
         </div>
@@ -788,7 +931,31 @@ export default function App() {
   // Determine if active window dims desktop widgets
   const anyActiveWindow = windows.some(w => w.isOpen && !w.isMinimized);
 
+  // Role-aware dock ordering
+  const baseDockApps = [
+    { id: 'dashboard', label: 'Dashboard', icon: 'home' },
+    { id: 'calendar', label: 'Calendar', icon: 'calendar_today' },
+    { id: 'rolehub', label: 'Role Hub', icon: APP_META.rolehub.icon },
+    { id: 'academic', label: 'Academic Hub', icon: 'school' },
+    { id: 'habits', label: 'Habits', icon: 'check_circle' },
+    { id: 'pomodoro', label: 'Focus Timer', icon: APP_META.pomodoro.icon },
+    { id: 'analytics', label: 'Analytics', icon: APP_META.analytics.icon },
+    { id: 'notes', label: 'Notes', icon: APP_META.notes.icon },
+    { id: 'goals', label: 'Goals', icon: APP_META.goals.icon },
+    { id: 'capture', label: 'Capture', icon: 'bolt' },
+    { id: 'music', label: 'Music', icon: APP_META.music.icon },
+    { id: 'settings', label: 'Settings', icon: 'settings' },
+    { id: 'passwords', label: 'Passwords', icon: 'vpn_key' },
+    { id: 'terminal', label: 'Terminal', icon: 'terminal' }
+  ];
+  const primaryRole = getRole(profile.primaryRole);
+  const orderedAppIds = [...new Set([...primaryRole.dockApps, ...baseDockApps.map(a => a.id)])];
+  const dockApps = orderedAppIds.map(id => baseDockApps.find(a => a.id === id)).filter(Boolean);
+
   if (!hasStarted) {
+    if (!profile.onboarded) {
+      return <OnboardingWizard onComplete={handleOnboardingComplete} />;
+    }
     return <LandingPage onStart={handleLaunchStart} />;
   }
 
@@ -806,7 +973,7 @@ export default function App() {
         <div 
           className="lock-screen-container animate-screensaver-bg flex flex-col justify-between items-center text-center cursor-pointer select-none bg-cover bg-center"
           style={{ 
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('/sequoia_wallpaper.jpg')`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('${getWallpaper(profile.wallpaper).path}')`,
             color: lockClockColor
           }}
           onClick={() => setLockScreenActive(false)}
@@ -957,8 +1124,12 @@ export default function App() {
 
           {/* Apps shortcuts in menu bar */}
           <button onClick={() => openApp('dashboard')} className="mac-menu-bar-btn max-[500px]:hidden">Dashboard</button>
+          <button onClick={() => openApp('rolehub')} className="mac-menu-bar-btn max-[560px]:hidden">Role Hub</button>
           <button onClick={() => openApp('calendar')} className="mac-menu-bar-btn max-[550px]:hidden">Calendar</button>
           <button onClick={() => openApp('academic')} className="mac-menu-bar-btn max-[600px]:hidden">Academic</button>
+          <button onClick={() => openApp('pomodoro')} className="mac-menu-bar-btn max-[640px]:hidden">Focus</button>
+          <button onClick={() => openApp('analytics')} className="mac-menu-bar-btn max-[700px]:hidden">Analytics</button>
+          <button onClick={() => openApp('notes')} className="mac-menu-bar-btn max-[750px]:hidden">Notes</button>
           <button onClick={() => openApp('passwords')} className="mac-menu-bar-btn max-[650px]:hidden">Passwords</button>
           <button onClick={() => openApp('terminal')} className="mac-menu-bar-btn max-[700px]:hidden">Terminal</button>
         </div>
@@ -1715,16 +1886,7 @@ export default function App() {
         <div className="mac-dock-container">
           
           {/* Core Apps icons */}
-          {[
-            { id: 'dashboard', label: 'Dashboard', icon: 'home' },
-            { id: 'calendar', label: 'Calendar', icon: 'calendar_today' },
-            { id: 'academic', label: 'Academic Hub', icon: 'school' },
-            { id: 'habits', label: 'Habits', icon: 'check_circle' },
-            { id: 'capture', label: 'Capture Inbox', icon: 'bolt' },
-            { id: 'settings', label: 'Settings', icon: 'settings' },
-            { id: 'passwords', label: 'Passwords', icon: 'vpn_key' },
-            { id: 'terminal', label: 'Terminal', icon: 'terminal' }
-          ].map(app => {
+          {dockApps.map(app => {
             const win = windows.find(w => w.id === app.id);
             const isOpen = win?.isOpen;
             const isMinimized = win?.isMinimized;

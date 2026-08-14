@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getRole } from '../roles';
 
 export default function Dashboard({
   tasks,
@@ -7,7 +8,8 @@ export default function Dashboard({
   setHabits,
   dailyLogs,
   setDailyLogs,
-  username = "Alex"
+  username = "Alex",
+  profile = {}
 }) {
   const [newLogText, setNewLogText] = useState('');
   const [quickTaskTitle, setQuickTaskTitle] = useState('');
@@ -138,9 +140,23 @@ export default function Dashboard({
             You have <span className="font-bold text-primary">{todayTasks.filter(t => !t.completed).length} pending tasks</span> and <span className="font-bold text-secondary">{completedHabits}/{activeHabits} habits</span> completed today.
           </p>
         </div>
-        <div className="hidden md:flex items-center gap-2 bg-surface-container-high dark:bg-surface-container rounded-full px-4 py-2 shimmer-card">
-          <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>wb_sunny</span>
-          <span className="font-label-caps text-label-caps font-bold">FOCUS STATE: ACTIVE</span>
+        <div className="hidden md:flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-surface-container-high dark:bg-surface-container rounded-full px-4 py-2 shimmer-card">
+            <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>wb_sunny</span>
+            <span className="font-label-caps text-label-caps font-bold">FOCUS STATE: ACTIVE</span>
+          </div>
+          <div
+            className="flex items-center gap-2 rounded-full px-2.5 py-1.5 shadow-sm"
+            style={{ backgroundColor: `${getRole(profile.primaryRole).accent}1a` }}
+            title={`${getRole(profile.primaryRole).name} · ${profile.wakeTime || '—'} wake · ${profile.focusWindow || 'Flexible'} focus`}
+          >
+            <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-lg">
+              {profile.avatar || '🧑'}
+            </span>
+            <span className="text-[11px] font-extrabold" style={{ color: getRole(profile.primaryRole).accent }}>
+              {getRole(profile.primaryRole).emoji} {getRole(profile.primaryRole).name}
+            </span>
+          </div>
         </div>
       </section>
 
