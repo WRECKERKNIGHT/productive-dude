@@ -19,6 +19,15 @@ export const sectionProgress = (engine, section, viewportHeight) => {
   return travel > 0 ? clamp((engine.scroll - sectionTop) / travel, 0, 1) : 0;
 };
 
+// Cached section measurement — avoid per-frame layout reads (offsetTop/offsetHeight).
+export const measureSection = (section, viewportHeight) => ({
+  top: section.offsetTop,
+  travel: Math.max(section.offsetHeight - viewportHeight, 1)
+});
+
+export const sectionProgressCached = (engine, m) =>
+  clamp((engine.scroll - m.top) / m.travel, 0, 1);
+
 // Live scroll velocity (px/frame) exposed by the lerp engine.
 export const scrollVelocity = (engine) => engine.velocity;
 

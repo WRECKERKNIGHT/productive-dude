@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ROLES, THEME_PRESETS } from '../roles';
-import { clamp, easeInOut, sectionProgress, velocitySkew } from '../lib/scrollfx';
+import { clamp, easeInOut, measureSection, sectionProgressCached, velocitySkew } from '../lib/scrollfx';
 
 const getThemeAccent = (id) => (THEME_PRESETS.find(t => t.id === id) || THEME_PRESETS[0]).accent;
 
@@ -169,10 +169,14 @@ export default function LandingPage({ onStart }) {
     if (!root || !section) return;
 
     let raf = 0;
+    let m = { top: 0, travel: 1 };
+    const measure = () => { m = measureSection(section, root.clientHeight); };
+    measure();
+    window.addEventListener('resize', measure);
 
     const tick = () => {
       const { velocity } = engineRef.current;
-      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const p = sectionProgressCached(engineRef.current, m);
       const center = p - 0.5;
 
       parallaxLayersRef.current.forEach((el, i) => {
@@ -189,7 +193,10 @@ export default function LandingPage({ onStart }) {
     };
     raf = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', measure);
+    };
   }, []);
 
   // Velocity-safe clip-path reveal: circle diameter + per-line insets are driven
@@ -203,9 +210,13 @@ export default function LandingPage({ onStart }) {
     const lines = Array.from(circle.querySelectorAll('.tm-line'));
 
     let raf = 0;
+    let m = { top: 0, travel: 1 };
+    const measure = () => { m = measureSection(section, root.clientHeight); };
+    measure();
+    window.addEventListener('resize', measure);
 
     const tick = () => {
-      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const p = sectionProgressCached(engineRef.current, m);
       const ease = easeInOut(p);
 
       circle.style.clipPath = `circle(${5 + ease * 115}% at 50% 50%)`;
@@ -224,7 +235,10 @@ export default function LandingPage({ onStart }) {
     };
     raf = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', measure);
+    };
   }, []);
 
   // Pinned scroll timeline: assembly parts converge + stage rotates on scroll
@@ -242,10 +256,14 @@ export default function LandingPage({ onStart }) {
 
     let raf = 0;
     let lastP = -1;
+    let m = { top: 0, travel: 1 };
+    const measure = () => { m = measureSection(section, root.clientHeight); };
+    measure();
+    window.addEventListener('resize', measure);
 
     const tick = () => {
       const { velocity } = engineRef.current;
-      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const p = sectionProgressCached(engineRef.current, m);
       const ease = easeInOut(p);
       const settle = Math.abs(p - lastP) < 0.001 && Math.abs(velocity) < 0.2;
       lastP = p;
@@ -294,17 +312,19 @@ export default function LandingPage({ onStart }) {
 
     let raf = 0;
     let range = 0;
+    let m = { top: 0, travel: 1 };
 
     const measure = () => {
       const viewport = root.clientWidth;
       range = Math.max(track.scrollWidth - viewport, 1);
+      m = measureSection(section, root.clientHeight);
     };
     measure();
     window.addEventListener('resize', measure);
 
     const tick = () => {
       const { velocity } = engineRef.current;
-      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const p = sectionProgressCached(engineRef.current, m);
       const skew = velocitySkew(velocity);
       track.style.transform = `translate3d(${-p * range}px, 0, 0) skewX(${skew}deg)`;
       raf = requestAnimationFrame(tick);
@@ -331,11 +351,16 @@ export default function LandingPage({ onStart }) {
     let raf = 0;
     let last = performance.now();
     let smoothVel = 0;
+    let max = root.scrollHeight - root.clientHeight;
 
-    const maxScroll = () => root.scrollHeight - root.clientHeight;
+    const measure = () => {
+      max = root.scrollHeight - root.clientHeight;
+      engineRef.current.max = max;
+    };
+    measure();
+    window.addEventListener('resize', measure);
 
     const apply = (delta) => {
-      const max = maxScroll();
       const atTop = target <= 0 && delta < 0;
       const atBottom = target >= max && delta > 0;
       const d = (atTop || atBottom) ? delta * 0.22 : delta; // edge resistance
@@ -370,7 +395,7 @@ export default function LandingPage({ onStart }) {
           break;
         case 'End':
           e.preventDefault();
-          target = maxScroll();
+          target = max;
           break;
         default:
           break;
@@ -387,7 +412,7 @@ export default function LandingPage({ onStart }) {
       smoothVel += (vel - smoothVel) * 0.12;
       root.scrollTop = current;
       engineRef.current.scroll = current;
-      engineRef.current.max = maxScroll();
+      engineRef.current.max = max;
       engineRef.current.velocity = smoothVel;
       if (Math.abs(target - current) < 0.05) {
         current = target;
@@ -403,7 +428,7 @@ export default function LandingPage({ onStart }) {
     raf = requestAnimationFrame(tick);
 
     engineRef.current.goto = (y) => {
-      target = Math.min(Math.max(y, 0), maxScroll());
+      target = Math.min(Math.max(y, 0), max);
     };
     engineRef.current.gotoSlide = (i) => {
       const slides = root.querySelectorAll('.scroll-snap-child');
@@ -413,6 +438,7 @@ export default function LandingPage({ onStart }) {
     return () => {
       root.removeEventListener('wheel', onWheel);
       window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', measure);
       cancelAnimationFrame(raf);
     };
   }, [reduceMotion]);
@@ -448,14 +474,22 @@ export default function LandingPage({ onStart }) {
     const total = slides.length;
 
     let raf = 0;
+    let viewport = root.clientHeight;
+    const measure = () => { viewport = root.clientHeight; };
+    measure();
+    window.addEventListener('resize', measure);
+
     const tick = () => {
-      const idx = clamp(Math.round(engineRef.current.scroll / Math.max(root.clientHeight, 1)), 0, total - 1);
+      const idx = clamp(Math.round(engineRef.current.scroll / Math.max(viewport, 1)), 0, total - 1);
       rails.forEach((btn, i) => btn.classList.toggle('active', i === idx));
       if (counter) counter.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', measure);
+    };
   }, []);
 
   // 3D tilt on toon-cards
