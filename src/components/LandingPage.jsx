@@ -65,6 +65,14 @@ const ASSEMBLY_STEPS = [
   { title: 'Enter Life OS', desc: 'Your dashboard, dock and analytics come online.', start: 0.66, end: 1.0 }
 ];
 
+// Clip-path reveal: a tiny circular photo expands to fill the screen while the
+// headline unmasks line-by-line, like text being written live by light.
+const REVEAL_LINES = [
+  { text: 'One app.', accent: false },
+  { text: 'Every role.', accent: false },
+  { text: 'Your rules.', accent: true }
+];
+
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
   const rootRef = useRef(null);
@@ -73,6 +81,46 @@ export default function LandingPage({ onStart }) {
   const horizontalTrackRef = useRef(null);
   const assemblyRef = useRef(null);
   const assemblyStageRef = useRef(null);
+  const clipRef = useRef(null);
+  const clipCircleRef = useRef(null);
+
+  // Velocity-safe clip-path reveal: circle diameter + per-line insets are driven
+  // directly by scroll progress of the pinned section.
+  useEffect(() => {
+    const root = rootRef.current;
+    const section = clipRef.current;
+    const circle = clipCircleRef.current;
+    if (!root || !section || !circle) return;
+
+    const lines = Array.from(circle.querySelectorAll('.tm-line'));
+
+    let raf = 0;
+
+    const tick = () => {
+      const { scroll } = engineRef.current;
+      const sectionTop = section.offsetTop;
+      const travel = section.offsetHeight - root.clientHeight;
+      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
+      const ease = p * p * (3 - 2 * p);
+
+      circle.style.clipPath = `circle(${5 + ease * 115}% at 50% 50%)`;
+      circle.style.opacity = ease > 0.01 ? 1 : 0;
+
+      lines.forEach((line, i) => {
+        const start = i / lines.length;
+        const end = (i + 1) / lines.length;
+        const local = Math.min(Math.max((p - start) / (end - start), 0), 1);
+        const reveal = local * local * (3 - 2 * local);
+        line.style.clipPath = `inset(0 0 ${(1 - reveal) * 100}% 0)`;
+        line.style.transform = `translateY(${(1 - reveal) * -18}px)`;
+      });
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   // Pinned scroll timeline: assembly parts converge + stage rotates on scroll
   // progress; milestone text panels crossfade at thresholds.
@@ -580,6 +628,36 @@ export default function LandingPage({ onStart }) {
                 <div className="text-[11px] text-on-surface-variant font-medium mt-1">{step.desc}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== SLIDE — CLIP-PATH CIRCLE REVEAL ===================== */}
+      <section ref={clipRef} className="relative" style={{ height: '240vh' }}>
+        <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-background" />
+
+          <div ref={clipCircleRef} className="absolute inset-0" style={{ clipPath: 'circle(5% at 50% 50%)', opacity: 0 }}>
+            <img src="/img/hero/slide-team.jpg" alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
+          </div>
+
+          <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center">
+            <span className="tm-line reveal px-4 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
+              Revealed By Scroll
+            </span>
+            <h2 className="font-classic text-[44px] md:text-[72px] leading-[1.06] mt-6 text-white" style={{ textShadow: '0 4px 30px rgba(0,0,0,0.4)' }}>
+              {REVEAL_LINES.map((line) => (
+                <span key={line.text} className="tm-line block will-change-transform">
+                  <span className={line.accent ? 'italic' : ''} style={line.accent ? { color: 'var(--primary)' } : {}}>
+                    {line.text}
+                  </span>
+                </span>
+              ))}
+            </h2>
+            <p className="tm-line mt-6 text-white/75 text-lg font-medium max-w-lg mx-auto leading-relaxed">
+              Scroll keeps moving — the circle opens, the words arrive, the promise lands.
+            </p>
           </div>
         </div>
       </section>
