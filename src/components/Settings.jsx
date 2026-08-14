@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 export default function Settings({
   username,
@@ -13,6 +13,7 @@ export default function Settings({
   loadTutorialDemo
 }) {
   const fileInputRef = useRef(null);
+  const [activeSection, setActiveSection] = useState('profile');
 
   const themePresets = [
     { id: 'focus-blue', name: 'Focus Blue', color: 'bg-[#004ac6]' },
@@ -37,7 +38,7 @@ export default function Settings({
         importData(parsed);
         alert('Data backup imported successfully!');
         window.location.reload();
-      } catch (err) {
+      } catch {
         alert('Failed to parse backup file. Please make sure it is a valid JSON file exported from this app.');
       }
     };
@@ -45,153 +46,183 @@ export default function Settings({
   };
 
   return (
-    <div className="space-y-lg animate-fade-in max-w-2xl mx-auto">
-      {/* Page Title */}
-      <div>
-        <h2 className="text-headline-lg font-bold text-primary">System Settings</h2>
-        <p className="text-on-surface-variant text-body-lg">
-          Configure application themes, manage data backups, and customize your user profile.
-        </p>
+    <div className="h-full flex flex-col text-on-surface select-none">
+      {/* Header */}
+      <div className="border-b border-outline/10 pb-3 mb-4 text-left">
+        <h2 className="text-body-lg font-extrabold text-primary flex items-center gap-2">
+          <span className="material-symbols-outlined">settings</span> System Settings
+        </h2>
+        <p className="text-[11px] text-on-surface-variant font-medium">Configure profile and aesthetic parameters.</p>
       </div>
 
-      <div className="space-y-md">
-        {/* Profile Card */}
-        <div className="glass-card rounded-2xl p-md space-y-sm">
-          <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">person</span>
-            User Profile
-          </h3>
-          
-          <div>
-            <label className="text-[10px] font-bold text-on-surface-variant block mb-1 uppercase tracking-wider">YOUR GREETING NAME</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full max-w-sm px-3 py-2 rounded-xl border border-outline/30 bg-surface/50 focus:outline-none focus:border-primary text-sm"
-              placeholder="e.g. Alex, Sarah..."
-            />
-          </div>
-        </div>
-
-        {/* Aesthetic Customization */}
-        <div className="glass-card rounded-2xl p-md space-y-md">
-          <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-            <span className="material-symbols-outlined text-secondary">palette</span>
-            Aesthetic Themes
-          </h3>
-
-          {/* Preset Grid */}
-          <div className="space-y-sm">
-            <label className="text-[10px] font-bold text-on-surface-variant block uppercase tracking-wider">COLOR PRESET</label>
-            <div className="flex flex-wrap gap-sm">
-              {themePresets.map(preset => {
-                const isActive = theme === preset.id;
-                return (
-                  <button
-                    key={preset.id}
-                    onClick={() => setTheme(preset.id)}
-                    className={`px-4 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm text-white transition-all active:scale-95 shadow-sm border-2 ${preset.color} ${isActive ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-surface border-white/50' : 'border-transparent hover:opacity-90'}`}
-                  >
-                    <span className="material-symbols-outlined text-[16px]">
-                      {isActive ? 'check_circle' : 'palette'}
-                    </span>
-                    {preset.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Mode Switcher */}
-          <div className="space-y-sm pt-2 border-t border-outline/10">
-            <label className="text-[10px] font-bold text-on-surface-variant block uppercase tracking-wider">APPEARANCE MODE</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setIsDark(false)}
-                className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 active:scale-95 transition-all ${!isDark ? 'bg-primary text-on-primary shadow-md shadow-primary/20' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'}`}
-              >
-                <span className="material-symbols-outlined text-[18px]">light_mode</span>
-                LIGHT MODE
-              </button>
-              <button
-                onClick={() => setIsDark(true)}
-                className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 active:scale-95 transition-all ${isDark ? 'bg-primary text-on-primary shadow-md shadow-primary/20' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'}`}
-              >
-                <span className="material-symbols-outlined text-[18px]">dark_mode</span>
-                DARK MODE
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Tutorial / Onboarding Loader */}
-        <div className="glass-card rounded-2xl p-md space-y-sm">
-          <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">school</span>
-            Tutorial / Demo Mode
-          </h3>
-          <p className="text-xs text-on-surface-variant leading-relaxed">
-            Need to explore with mock datasets? Click below to populate tasks, habits, and subject syllabi with sample info immediately.
-          </p>
-          <button
-            onClick={() => {
-              loadTutorialDemo();
-              alert('Tutorial demo data preloaded successfully!');
-              window.location.reload();
-            }}
-            className="px-4 py-2 bg-gradient-to-r from-primary to-tertiary text-white text-xs font-bold rounded-xl active:scale-95 hover:opacity-95 transition-all shadow-md shadow-primary/10"
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 min-h-0">
+        {/* Left Sidebar Menu (Col span 4) */}
+        <div className="md:col-span-4 space-y-1.5 border-r border-outline/5 pr-2">
+          <button 
+            onClick={() => setActiveSection('profile')}
+            className={`w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs font-bold transition-all ${activeSection === 'profile' ? 'bg-primary/10 text-primary' : 'hover:bg-surface-container-high/30'}`}
           >
-            LOAD TUTORIAL DEMO DATA
+            <span className="material-symbols-outlined text-[18px]">person</span>
+            User Profile
+          </button>
+          
+          <button 
+            onClick={() => setActiveSection('appearance')}
+            className={`w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs font-bold transition-all ${activeSection === 'appearance' ? 'bg-primary/10 text-primary' : 'hover:bg-surface-container-high/30'}`}
+          >
+            <span className="material-symbols-outlined text-[18px]">palette</span>
+            Appearance & Themes
+          </button>
+
+          <button 
+            onClick={() => setActiveSection('tutorial')}
+            className={`w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs font-bold transition-all ${activeSection === 'tutorial' ? 'bg-primary/10 text-primary' : 'hover:bg-surface-container-high/30'}`}
+          >
+            <span className="material-symbols-outlined text-[18px]">school</span>
+            Demo & Tutorial Mode
+          </button>
+
+          <button 
+            onClick={() => setActiveSection('database')}
+            className={`w-full flex items-center gap-3 p-2.5 rounded-xl text-left text-xs font-bold transition-all ${activeSection === 'database' ? 'bg-primary/10 text-primary' : 'hover:bg-surface-container-high/30'}`}
+          >
+            <span className="material-symbols-outlined text-[18px]">database</span>
+            Database Backups
           </button>
         </div>
 
-        {/* Data Management */}
-        <div className="glass-card rounded-2xl p-md space-y-md">
-          <h3 className="text-body-lg font-bold text-on-surface flex items-center gap-2">
-            <span className="material-symbols-outlined text-tertiary">database</span>
-            Local Database Management
-          </h3>
+        {/* Right Details Container (Col span 8) */}
+        <div className="md:col-span-8 overflow-y-auto scroll-hide pl-1 text-left min-h-0 space-y-3">
+          
+          {activeSection === 'profile' && (
+            <div className="p-4 bg-surface-color/45 dark:bg-black/10 border border-outline/10 rounded-2xl space-y-3">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-primary block">User Profile Details</h3>
+              <div className="space-y-sm">
+                <label className="text-[10px] font-bold text-on-surface-variant block uppercase tracking-wider">YOUR GREETING NAME</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full max-w-sm px-3 py-2 rounded-xl border border-outline/30 bg-surface/50 focus:outline-none focus:border-primary text-xs font-medium"
+                  placeholder="e.g. Alex, Sarah..."
+                />
+              </div>
+            </div>
+          )}
 
-          <p className="text-xs text-on-surface-variant leading-relaxed">
-            All data in PRODUCTIVEDUDE is strictly stored inside your local browser storage (`localStorage`). No information leaves your machine. To backup or move your data, export it below.
-          </p>
+          {activeSection === 'appearance' && (
+            <div className="p-4 bg-surface-color/45 dark:bg-black/10 border border-outline/10 rounded-2xl space-y-4">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-primary block">System Appearance</h3>
+              
+              {/* Preset Selection */}
+              <div className="space-y-sm">
+                <label className="text-[10px] font-bold text-on-surface-variant block uppercase tracking-wider">COLOR PRESET</label>
+                <div className="flex flex-wrap gap-2">
+                  {themePresets.map(preset => {
+                    const isActive = theme === preset.id;
+                    return (
+                      <button
+                        key={preset.id}
+                        onClick={() => setTheme(preset.id)}
+                        className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold text-[11px] text-white transition-all active:scale-95 shadow-sm border-2 ${preset.color} ${isActive ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-surface border-white/50' : 'border-transparent hover:opacity-95'}`}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">
+                          {isActive ? 'check_circle' : 'palette'}
+                        </span>
+                        {preset.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-          <div className="flex flex-wrap gap-2 pt-2">
-            <button
-              onClick={exportData}
-              className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20"
-            >
-              <span className="material-symbols-outlined text-[18px]">download</span>
-              EXPORT BACKUP (JSON)
-            </button>
-            
-            <button
-              onClick={handleImportClick}
-              className="px-4 py-2 bg-secondary text-white text-sm font-bold rounded-xl flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md shadow-secondary/20"
-            >
-              <span className="material-symbols-outlined text-[18px]">upload</span>
-              IMPORT BACKUP (JSON)
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".json"
-              className="hidden"
-            />
-          </div>
+              {/* Mode Selection */}
+              <div className="space-y-sm pt-3 border-t border-outline/10">
+                <label className="text-[10px] font-bold text-on-surface-variant block uppercase tracking-wider">DARK/LIGHT STYLE</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setIsDark(false)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all ${!isDark ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'}`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">light_mode</span>
+                    LIGHT MODE
+                  </button>
+                  <button
+                    onClick={() => setIsDark(true)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all ${isDark ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant'}`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">dark_mode</span>
+                    DARK MODE
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
-          <div className="pt-4 border-t border-outline/10">
-            <h4 className="text-xs font-bold text-error block mb-1">DANGER ZONE</h4>
-            <p className="text-[11px] text-on-surface-variant mb-2">Resets the app back to initial blank slate, wiping out tasks, habits, subjects, and records.</p>
-            <button
-              onClick={resetAllData}
-              className="px-4 py-2 bg-error/10 hover:bg-error/20 text-error text-xs font-bold rounded-xl active:scale-95 transition-all"
-            >
-              RESET ALL APP DATA
-            </button>
-          </div>
+          {activeSection === 'tutorial' && (
+            <div className="p-4 bg-surface-color/45 dark:bg-black/10 border border-outline/10 rounded-2xl space-y-3">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-primary block">Tutorial Mode</h3>
+              <p className="text-xs text-on-surface-variant leading-relaxed font-medium">
+                Need to explore with mock datasets? Click below to populate tasks, habits, and subject syllabi with sample info immediately.
+              </p>
+              <button
+                onClick={() => {
+                  loadTutorialDemo();
+                  alert('Tutorial demo data preloaded successfully!');
+                  window.location.reload();
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-primary to-tertiary text-white text-xs font-bold rounded-xl active:scale-95 hover:opacity-95 transition-all shadow-sm"
+              >
+                LOAD TUTORIAL DEMO DATA
+              </button>
+            </div>
+          )}
+
+          {activeSection === 'database' && (
+            <div className="p-4 bg-surface-color/45 dark:bg-black/10 border border-outline/10 rounded-2xl space-y-4">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-primary block">Local Database Controls</h3>
+              <p className="text-xs text-on-surface-variant leading-relaxed font-medium">
+                All data is strictly stored inside your local browser storage (`localStorage`). No information leaves your machine.
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                <button
+                  onClick={exportData}
+                  className="px-3.5 py-1.5 bg-primary text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:opacity-90 active:scale-95 transition-all shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[16px]">download</span>
+                  EXPORT BACKUP (JSON)
+                </button>
+                
+                <button
+                  onClick={handleImportClick}
+                  className="px-3.5 py-1.5 bg-secondary text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:opacity-90 active:scale-95 transition-all shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[16px]">upload</span>
+                  IMPORT BACKUP (JSON)
+                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept=".json"
+                  className="hidden"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-outline/10">
+                <h4 className="text-[11px] font-bold text-error block mb-1 uppercase tracking-wider">Danger Zone</h4>
+                <p className="text-[10px] text-on-surface-variant mb-2">Resets the app back to initial blank slate, wiping out tasks, habits, subjects, and records.</p>
+                <button
+                  onClick={resetAllData}
+                  className="px-4 py-2 bg-error/10 hover:bg-error/20 text-error text-xs font-bold rounded-xl active:scale-95 transition-all"
+                >
+                  RESET ALL APP DATA
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

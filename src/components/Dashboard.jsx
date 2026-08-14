@@ -379,7 +379,7 @@ export default function Dashboard({
                     className={`glass-card p-sm rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border-2 border-transparent ${btnBg}`}
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDone ? 'bg-surface' : 'bg-surface-container'} shadow-sm`}>
-                      <span className={`material-symbols-outlined text-[18px] ${iconColor}`} style={{ fontVariationSettings: `\'FILL\' ${isDone ? 1 : 0}` }}>
+                      <span className={`material-symbols-outlined text-[18px] ${iconColor}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                         {habit.icon}
                       </span>
                     </div>

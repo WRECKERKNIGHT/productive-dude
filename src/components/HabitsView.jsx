@@ -221,19 +221,15 @@ export default function HabitsView({
             ) : (
               habits.map(habit => {
                 const todayProgress = habit.progress[todayStr] || 0;
-                const isCompletedToday = todayProgress >= habit.target;
                 const pct = Math.min(100, Math.round((todayProgress / habit.target) * 100));
 
                 let colorClass = 'text-primary';
-                let bgClass = 'bg-primary-container/20';
                 let strokeColor = 'var(--primary)';
                 if (habit.color === 'secondary') {
                   colorClass = 'text-secondary';
-                  bgClass = 'bg-secondary-container/20';
                   strokeColor = 'var(--secondary)';
                 } else if (habit.color === 'tertiary') {
                   colorClass = 'text-tertiary';
-                  bgClass = 'bg-tertiary-container/20';
                   strokeColor = 'var(--tertiary)';
                 }
 
@@ -257,7 +253,7 @@ export default function HabitsView({
                         ></circle>
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className={`material-symbols-outlined !text-3xl ${colorClass}`} style={{ fontVariationSettings: `\'FILL\' ${isCompletedToday ? 1 : 0}` }}>
+                        <span className={`material-symbols-outlined !text-3xl ${colorClass}`} style={{ fontVariationSettings: "'FILL' 1" }}>
                           {habit.icon}
                         </span>
                       </div>
@@ -312,7 +308,7 @@ export default function HabitsView({
                           >
                             <span className="text-[10px] font-bold text-on-surface-variant">{day.dayName}</span>
                             <div className={`w-7 h-7 rounded-full flex items-center justify-center ${circleBg} transition-all`}>
-                              <span className={`material-symbols-outlined text-[14px] ${checkColor}`} style={{ fontVariationSettings: "\'FILL\' 1, \'wght\' 700" }}>
+                              <span className={`material-symbols-outlined text-[14px] ${checkColor}`} style={{ fontVariationSettings: "'FILL' 1, 'wght' 700" }}>
                                 check
                               </span>
                             </div>

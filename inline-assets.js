@@ -12,27 +12,28 @@ if (!fs.existsSync(htmlFile)) {
 let htmlContent = fs.readFileSync(htmlFile, 'utf8');
 
 // Find and inline CSS files
-const cssRegex = /<link\s+[^>]*href=["']\/?(assets\/[^"']+\.css)["'][^>]*>/g;
-let match;
-while ((match = cssRegex.exec(htmlContent)) !== null) {
-  const cssPath = path.join(distPath, match[1]);
+const cssRegex = /<link\s+[^>]*href=["'](?:\.\/|\/)?(assets\/[^"']+\.css)["'][^>]*>/g;
+htmlContent = htmlContent.replace(cssRegex, (match, cssFile) => {
+  const cssPath = path.join(distPath, cssFile);
   if (fs.existsSync(cssPath)) {
     const cssContent = fs.readFileSync(cssPath, 'utf8');
-    htmlContent = htmlContent.replace(match[0], `<style>${cssContent}</style>`);
-    console.log(`Inlined CSS: ${match[1]}`);
+    console.log(`Inlined CSS: ${cssFile}`);
+    return `<style>${cssContent}</style>`;
   }
-}
+  return match;
+});
 
 // Find and inline JS files
-const jsRegex = /<script\s+[^>]*src=["']\/?(assets\/[^"']+\.js)["'][^>]*><\/script>/g;
-while ((match = jsRegex.exec(htmlContent)) !== null) {
-  const jsPath = path.join(distPath, match[1]);
+const jsRegex = /<script\s+[^>]*src=["'](?:\.\/|\/)?(assets\/[^"']+\.js)["'][^>]*><\/script>/g;
+htmlContent = htmlContent.replace(jsRegex, (match, jsFile) => {
+  const jsPath = path.join(distPath, jsFile);
   if (fs.existsSync(jsPath)) {
     const jsContent = fs.readFileSync(jsPath, 'utf8');
-    htmlContent = htmlContent.replace(match[0], `<script type="module">${jsContent}</script>`);
-    console.log(`Inlined JS: ${match[1]}`);
+    console.log(`Inlined JS: ${jsFile}`);
+    return `<script type="module">${jsContent}</script>`;
   }
-}
+  return match;
+});
 
 // Write the modified index.html back
 fs.writeFileSync(htmlFile, htmlContent, 'utf8');

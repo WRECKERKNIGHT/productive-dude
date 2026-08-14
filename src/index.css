@@ -226,11 +226,10 @@
 
 body {
   font-family: 'Hanken Grotesk', sans-serif;
-  background-color: var(--bg-color);
-  background-image: 
-    radial-gradient(at 0% 0%, var(--mesh-1) 0px, transparent 55%),
-    radial-gradient(at 100% 0%, var(--mesh-2) 0px, transparent 55%),
-    radial-gradient(at 50% 100%, rgba(255, 255, 255, 0.02) 0px, transparent 50%);
+  background-color: #0d0f17;
+  background-image: url('/sequoia_wallpaper.jpg');
+  background-size: cover;
+  background-position: center;
   color: var(--on-surface);
   transition: background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   min-height: 100vh;
@@ -244,27 +243,192 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
   border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.02),
+    0 15px 35px -10px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dark .glass-card {
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.35);
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 30px rgba(0, 0, 0, 0.2),
+    0 25px 50px -15px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0px rgba(0, 0, 0, 0.4);
 }
 
 .glass-card:hover {
-  transform: translateY(-3px) scale(1.005);
-  box-shadow: 0 20px 40px -15px rgba(0, 74, 198, 0.06);
+  transform: translateY(-2px) scale(1.002);
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.04),
+    0 20px 45px -12px rgba(0, 74, 198, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
 .dark .glass-card:hover {
-  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.45);
+  box-shadow: 
+    0 12px 35px rgba(0, 0, 0, 0.25),
+    0 30px 60px -12px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0px rgba(255, 255, 255, 0.18);
+}
+
+/* macOS Monterey Top Menu Bar Styles */
+.mac-menu-bar {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.02);
+}
+
+.dark .mac-menu-bar {
+  background: rgba(15, 23, 42, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mac-menu-bar-btn {
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.mac-menu-bar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.dark .mac-menu-bar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* macOS Monterey Dock styling */
+.mac-dock-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 8px 16px 12px 16px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(35px) saturate(210%);
+  -webkit-backdrop-filter: blur(35px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 24px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.05),
+    0 25px 60px -20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.dark .mac-dock-container {
+  background: rgba(20, 24, 33, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 
+    0 15px 45px rgba(0, 0, 0, 0.3),
+    0 30px 70px -15px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0px rgba(255, 255, 255, 0.1);
+}
+
+.mac-dock-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: bottom;
+}
+
+.mac-dock-item:hover {
+  transform: scale(1.28) translateY(-10px);
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.mac-dock-item:active {
+  transform: scale(1.1) translateY(-3px);
+}
+
+/* Control Center Sliders & Indicators */
+.tahoe-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  outline: none;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .tahoe-slider {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.tahoe-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: -200px 0 0 200px var(--primary), 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.tahoe-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: -200px 0 0 200px var(--primary), 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.tahoe-toggle-active {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+/* Right Side Notification Drawer slide-out */
+.notification-drawer {
+  position: fixed;
+  top: 32px;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  height: calc(100vh - 32px);
+  z-index: 45;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(35px) saturate(210%);
+  -webkit-backdrop-filter: blur(35px) saturate(210%);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.05);
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .notification-drawer {
+  background: rgba(15, 23, 42, 0.4);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.3);
+}
+
+.notification-drawer.open {
+  transform: translateX(0);
 }
 
 .scroll-hide::-webkit-scrollbar {
@@ -389,4 +553,214 @@ h1, h2, h3, h4, h5, h6 {
   0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
   70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
   100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+/* window management styling */
+.window-container {
+  position: absolute;
+  min-width: 340px;
+  min-height: 200px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.05),
+    0 24px 60px -15px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.1s ease;
+}
+
+.dark .window-container {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.2),
+    0 30px 80px -20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0px rgba(255, 255, 255, 0.12);
+}
+
+.window-active {
+  border-color: var(--primary) !important;
+  box-shadow: 
+    0 10px 35px rgba(0, 74, 198, 0.04),
+    0 30px 75px -10px rgba(0, 74, 198, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
+}
+
+.dark .window-active {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    0 40px 90px -15px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0px rgba(255, 255, 255, 0.18) !important;
+}
+
+.window-header {
+  height: 38px;
+  background: rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: grab;
+  padding: 0 12px;
+}
+
+.dark .window-header {
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.window-header:active {
+  cursor: grabbing;
+}
+
+.window-btn-close {
+  background-color: #ff5f56;
+}
+.window-btn-minimize {
+  background-color: #ffbd2e;
+}
+.window-btn-maximize {
+  background-color: #27c93f;
+}
+
+.window-content {
+  flex-grow: 1;
+  padding: 16px;
+  overflow: auto;
+}
+
+/* Snapping hint outlines */
+.tiling-preview-hint {
+  position: fixed;
+  background: rgba(59, 130, 246, 0.12);
+  border: 2px dashed rgba(59, 130, 246, 0.6);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 41;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(4px);
+}
+
+/* Stage Manager */
+.stage-manager-sidebar {
+  position: fixed;
+  top: 48px;
+  left: 12px;
+  bottom: 96px;
+  width: 90px;
+  z-index: 39;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.stage-card {
+  width: 76px;
+  height: 56px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dark .stage-card {
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stage-card:hover {
+  transform: scale(1.15) translateX(6px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* Lock screen styling */
+.lock-screen-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Clock typefaces */
+.font-clock-default {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.font-clock-serif {
+  font-family: Georgia, serif;
+}
+.font-clock-rounded {
+  font-family: 'Outfit', sans-serif;
+}
+.font-clock-playful {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+/* Desktop widgets */
+.desktop-widgets-grid {
+  position: absolute;
+  top: 48px;
+  left: 120px;
+  right: 120px;
+  bottom: 110px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+  pointer-events: none;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.desktop-widget-item {
+  pointer-events: auto;
+}
+
+.widgets-dimmed {
+  opacity: 0.15;
+  filter: blur(1.5px);
+}
+
+/* Custom animation for Screen Saver */
+@keyframes screensaver-move {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+.animate-screensaver-bg {
+  background-size: 400% 400%;
+  animation: screensaver-move 20s ease infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+body.electron-window {
+  background-color: transparent !important;
+  background-image: none !important;
 }
