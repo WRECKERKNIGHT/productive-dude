@@ -37,10 +37,58 @@ const PILLARS = [
   }
 ];
 
+// Horizontal track-lock gallery (concept: axis flipping). Vertical scroll drives
+// a pinned horizontal slide across a wider-than-viewport strip of panels.
+const HORIZONTAL_PANELS = [
+  { n: '01', icon: 'add_box', title: 'Capture', desc: 'Sudden thought? Snag it in the capture inbox before it escapes.', img: '/img/hero/slide-planning.jpg', accent: 'theme-forest-green' },
+  { n: '02', icon: 'calendar_month', title: 'Plan', desc: 'Timeblock the day from wake time to peak focus window.', img: '/img/hero/slide-plan.jpg', accent: 'theme-sunset-orange' },
+  { n: '03', icon: 'timer', title: 'Focus', desc: 'Pomodoro sprints with lo-fi ambience and zero noise.', img: '/img/hero/slide-focus.jpg', accent: 'theme-royal-purple' },
+  { n: '04', icon: 'emoji_events', title: 'Achieve', desc: 'Log the win, grow the streak, watch the analytics climb.', img: '/img/hero/slide-achieve.jpg', accent: 'theme-teal' },
+  { n: '05', icon: 'groups', title: 'Together', desc: 'Notes, goals and roles — one OS shared across every craft.', img: '/img/misc/team-collab.jpg', accent: 'theme-cyber-pink' },
+  { n: '06', icon: 'rocket_launch', title: 'Ship', desc: 'End the day knowing exactly what you shipped.', img: '/img/misc/workspace.jpg', accent: 'theme-navy-slate' }
+];
+
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
   const rootRef = useRef(null);
   const engineRef = useRef({ scroll: 0, max: 0, velocity: 0 });
+  const horizontalRef = useRef(null);
+  const horizontalTrackRef = useRef(null);
+
+  // Horizontal track lock: vertical scroll maps to horizontal travel across the
+  // pinned gallery, with a velocity skew that settles back to zero when stopped.
+  useEffect(() => {
+    const root = rootRef.current;
+    const section = horizontalRef.current;
+    const track = horizontalTrackRef.current;
+    if (!root || !section || !track) return;
+
+    let raf = 0;
+    let range = 0;
+
+    const measure = () => {
+      const viewport = root.clientWidth;
+      range = Math.max(track.scrollWidth - viewport, 1);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+
+    const tick = () => {
+      const { scroll, velocity } = engineRef.current;
+      const sectionTop = section.offsetTop;
+      const travel = section.offsetHeight - root.clientHeight;
+      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
+      const skew = Math.max(Math.min(velocity * 4, 14), -14);
+      track.style.transform = `translate3d(${-p * range}px, 0, 0) skewX(${skew}deg)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
 
   // Smooth inertia & momentum scrolling (lerp physics).
   // Wheel input drives a virtual target; a requestAnimationFrame loop eases the
@@ -340,6 +388,57 @@ export default function LandingPage({ onStart }) {
               {role.emoji} {role.name}
             </span>
           ))}
+        </div>
+      </section>
+
+      {/* ===================== SLIDE — HORIZONTAL TRACK LOCK ===================== */}
+      <section ref={horizontalRef} className="relative" style={{ height: '320vh' }}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-background" />
+          <div className="absolute inset-0 stripes-pattern opacity-20" />
+          <div className="orb orb-float top-[-20%] right-[-10%] w-[40vw] h-[40vw]" style={{ backgroundColor: 'var(--primary)' }} />
+
+          <div className="relative z-10 px-6 pb-8 max-w-6xl mx-auto w-full flex items-end justify-between">
+            <div>
+              <span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
+                Axis Flip · Horizontal Track
+              </span>
+              <h2 className="reveal reveal-delay-1 font-classic text-[36px] md:text-[52px] mt-4">
+                The whole day, <span className="italic" style={{ color: 'var(--primary)' }}>sideways.</span>
+              </h2>
+            </div>
+            <span className="hidden md:block font-mono text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
+              Vertical scroll → horizontal journey
+            </span>
+          </div>
+
+          <div ref={horizontalTrackRef} className="relative z-10 flex items-center gap-5 pl-[6vw] will-change-transform">
+            {HORIZONTAL_PANELS.map((panel) => (
+              <div
+                key={panel.n}
+                className="toon-card shrink-0 w-[70vw] md:w-[440px] rounded-3xl overflow-hidden shadow-hard"
+                style={{ borderColor: getThemeAccent(panel.accent) }}
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <img src={panel.img} alt={panel.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute top-4 left-4 font-mono text-[13px] font-extrabold text-white/80">{panel.n}</div>
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center gap-2">
+                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-white" style={{ backgroundColor: getThemeAccent(panel.accent) }}>
+                      <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>{panel.icon}</span>
+                    </span>
+                    <h3 className="font-headline font-extrabold text-white text-xl">{panel.title}</h3>
+                  </div>
+                </div>
+                <div className="p-5 bg-white/95 dark:bg-black/30 text-left">
+                  <p className="text-[12px] text-on-surface-variant font-medium leading-relaxed">{panel.desc}</p>
+                </div>
+              </div>
+            ))}
+            <div className="shrink-0 px-8 text-on-surface-variant">
+              <span className="material-symbols-outlined text-[42px]" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>
+            </div>
+          </div>
         </div>
       </section>
 
