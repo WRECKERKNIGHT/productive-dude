@@ -25,6 +25,8 @@
   --font-headline: "Plus Jakarta Sans", sans-serif;
   --font-body: "Hanken Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --font-classic: "Playfair Display", Georgia, serif;
+  --font-classic2: "Cormorant Garamond", Georgia, serif;
 }
 
 :root {
@@ -222,6 +224,277 @@
   --on-surface-variant: #ffe4e6;
   --mesh-1: rgba(244, 63, 94, 0.16);
   --mesh-2: rgba(124, 58, 237, 0.12);
+}
+
+/* ==========================================================================
+   PRODUCTIVEDUDE V3 — Multicolor Theme Library
+   12 switchable accent worlds. Light + Dark for every theme.
+   ========================================================================== */
+
+/* 6. Lagoon Teal */
+.theme-teal {
+  --primary: #0f766e;
+  --primary-container: #14b8a6;
+  --on-primary: #ffffff;
+  --on-primary-container: #f0fdfa;
+  --secondary: #0369a1;
+  --secondary-container: #0ea5e9;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #f0f9ff;
+  --tertiary: #7c3aed;
+  --tertiary-container: #8b5cf6;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #f5f3ff;
+  --bg-color: #f0fdfa;
+  --surface-color: #ffffff;
+  --surface-container: #ccfbf1;
+  --surface-container-high: #99f6e4;
+  --on-surface: #042f2e;
+  --on-surface-variant: #115e59;
+  --outline-color: #14b8a6;
+  --outline-variant-color: #5eead4;
+  --mesh-1: rgba(20, 184, 166, 0.09);
+  --mesh-2: rgba(124, 58, 237, 0.07);
+}
+.dark.theme-teal {
+  --primary: #2dd4bf;
+  --primary-container: #0d9488;
+  --bg-color: #022c2a;
+  --surface-color: #0f3d3a;
+  --surface-container: #14534e;
+  --surface-container-high: #1a6a64;
+  --on-surface: #f0fdfa;
+  --on-surface-variant: #99f6e4;
+  --mesh-1: rgba(45, 212, 191, 0.16);
+  --mesh-2: rgba(139, 92, 246, 0.12);
+}
+
+/* 7. Cyber Pink */
+.theme-cyber-pink {
+  --primary: #db2777;
+  --primary-container: #ec4899;
+  --on-primary: #ffffff;
+  --on-primary-container: #fdf2f8;
+  --secondary: #7c3aed;
+  --secondary-container: #8b5cf6;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #f5f3ff;
+  --tertiary: #0891b2;
+  --tertiary-container: #06b6d4;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #ecfeff;
+  --bg-color: #fdf2f8;
+  --surface-color: #ffffff;
+  --surface-container: #fbcfe8;
+  --surface-container-high: #f9a8d4;
+  --on-surface: #500724;
+  --on-surface-variant: #9d174d;
+  --outline-color: #ec4899;
+  --outline-variant-color: #f9a8d4;
+  --mesh-1: rgba(236, 72, 153, 0.09);
+  --mesh-2: rgba(139, 92, 246, 0.08);
+}
+.dark.theme-cyber-pink {
+  --primary: #f472b6;
+  --primary-container: #be185d;
+  --bg-color: #1c0511;
+  --surface-color: #3b0a24;
+  --surface-container: #5c1238;
+  --surface-container-high: #781a48;
+  --on-surface: #fdf2f8;
+  --on-surface-variant: #fbcfe8;
+  --mesh-1: rgba(244, 114, 182, 0.17);
+  --mesh-2: rgba(139, 92, 246, 0.13);
+}
+
+/* 8. Amber Gold */
+.theme-amber-gold {
+  --primary: #b45309;
+  --primary-container: #f59e0b;
+  --on-primary: #ffffff;
+  --on-primary-container: #fffbeb;
+  --secondary: #be185d;
+  --secondary-container: #ec4899;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #fdf2f8;
+  --tertiary: #4d7c0f;
+  --tertiary-container: #84cc16;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #f7fee7;
+  --bg-color: #fffbeb;
+  --surface-color: #ffffff;
+  --surface-container: #fef3c7;
+  --surface-container-high: #fde68a;
+  --on-surface: #451a03;
+  --on-surface-variant: #92400e;
+  --outline-color: #f59e0b;
+  --outline-variant-color: #fcd34d;
+  --mesh-1: rgba(245, 158, 11, 0.1);
+  --mesh-2: rgba(236, 72, 153, 0.07);
+}
+.dark.theme-amber-gold {
+  --primary: #fbbf24;
+  --primary-container: #b45309;
+  --bg-color: #1c1202;
+  --surface-color: #3b2906;
+  --surface-container: #5c3f0a;
+  --surface-container-high: #784d0d;
+  --on-surface: #fffbeb;
+  --on-surface-variant: #fde68a;
+  --mesh-1: rgba(251, 191, 36, 0.16);
+  --mesh-2: rgba(236, 72, 153, 0.12);
+}
+
+/* 9. Mint Aqua */
+.theme-mint-aqua {
+  --primary: #047857;
+  --primary-container: #10b981;
+  --on-primary: #ffffff;
+  --on-primary-container: #ecfdf5;
+  --secondary: #0284c7;
+  --secondary-container: #38bdf8;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #f0f9ff;
+  --tertiary: #6b21a8;
+  --tertiary-container: #a855f7;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #faf5ff;
+  --bg-color: #ecfdf5;
+  --surface-color: #ffffff;
+  --surface-container: #d1fae5;
+  --surface-container-high: #a7f3d0;
+  --on-surface: #022c22;
+  --on-surface-variant: #065f46;
+  --outline-color: #10b981;
+  --outline-variant-color: #6ee7b7;
+  --mesh-1: rgba(16, 185, 129, 0.09);
+  --mesh-2: rgba(56, 189, 248, 0.07);
+}
+.dark.theme-mint-aqua {
+  --primary: #34d399;
+  --primary-container: #047857;
+  --bg-color: #022a1f;
+  --surface-color: #064236;
+  --surface-container: #0a5747;
+  --surface-container-high: #0e6b59;
+  --on-surface: #ecfdf5;
+  --on-surface-variant: #a7f3d0;
+  --mesh-1: rgba(52, 211, 153, 0.16);
+  --mesh-2: rgba(56, 189, 248, 0.12);
+}
+
+/* 10. Berry Red */
+.theme-berry {
+  --primary: #be123c;
+  --primary-container: #e11d48;
+  --on-primary: #ffffff;
+  --on-primary-container: #fff1f2;
+  --secondary: #7c2d12;
+  --secondary-container: #ea580c;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #fff7ed;
+  --tertiary: #7e22ce;
+  --tertiary-container: #9333ea;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #faf5ff;
+  --bg-color: #fff1f2;
+  --surface-color: #ffffff;
+  --surface-container: #ffe4e6;
+  --surface-container-high: #fecdd3;
+  --on-surface: #4c0519;
+  --on-surface-variant: #881337;
+  --outline-color: #e11d48;
+  --outline-variant-color: #fda4af;
+  --mesh-1: rgba(225, 29, 72, 0.09);
+  --mesh-2: rgba(147, 51, 234, 0.07);
+}
+.dark.theme-berry {
+  --primary: #fb7185;
+  --primary-container: #be123c;
+  --bg-color: #20040c;
+  --surface-color: #400819;
+  --surface-container: #600d27;
+  --surface-container-high: #7f1233;
+  --on-surface: #fff1f2;
+  --on-surface-variant: #fecdd3;
+  --mesh-1: rgba(251, 113, 133, 0.17);
+  --mesh-2: rgba(147, 51, 234, 0.12);
+}
+
+/* 11. Navy Slate */
+.theme-navy-slate {
+  --primary: #1d4ed8;
+  --primary-container: #3b82f6;
+  --on-primary: #ffffff;
+  --on-primary-container: #eff6ff;
+  --secondary: #0f766e;
+  --secondary-container: #14b8a6;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #f0fdfa;
+  --tertiary: #b45309;
+  --tertiary-container: #f59e0b;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #fffbeb;
+  --bg-color: #f8fafc;
+  --surface-color: #ffffff;
+  --surface-container: #e2e8f0;
+  --surface-container-high: #cbd5e1;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline-color: #3b82f6;
+  --outline-variant-color: #93c5fd;
+  --mesh-1: rgba(59, 130, 246, 0.09);
+  --mesh-2: rgba(20, 184, 166, 0.07);
+}
+.dark.theme-navy-slate {
+  --primary: #60a5fa;
+  --primary-container: #1e40af;
+  --bg-color: #020617;
+  --surface-color: #0f172a;
+  --surface-container: #1e293b;
+  --surface-container-high: #334155;
+  --on-surface: #f8fafc;
+  --on-surface-variant: #94a3b8;
+  --mesh-1: rgba(96, 165, 250, 0.16);
+  --mesh-2: rgba(20, 184, 166, 0.12);
+}
+
+/* 12. Lavender */
+.theme-lavender {
+  --primary: #6d28d9;
+  --primary-container: #8b5cf6;
+  --on-primary: #ffffff;
+  --on-primary-container: #f5f3ff;
+  --secondary: #be185d;
+  --secondary-container: #ec4899;
+  --on-secondary: #ffffff;
+  --on-secondary-container: #fdf2f8;
+  --tertiary: #0d9488;
+  --tertiary-container: #14b8a6;
+  --on-tertiary: #ffffff;
+  --on-tertiary-container: #f0fdfa;
+  --bg-color: #faf5ff;
+  --surface-color: #ffffff;
+  --surface-container: #ede9fe;
+  --surface-container-high: #ddd6fe;
+  --on-surface: #3b0764;
+  --on-surface-variant: #6b21a8;
+  --outline-color: #8b5cf6;
+  --outline-variant-color: #c4b5fd;
+  --mesh-1: rgba(139, 92, 246, 0.1);
+  --mesh-2: rgba(236, 72, 153, 0.07);
+}
+.dark.theme-lavender {
+  --primary: #a78bfa;
+  --primary-container: #6d28d9;
+  --bg-color: #150821;
+  --surface-color: #2d1244;
+  --surface-container: #431c66;
+  --surface-container-high: #572487;
+  --on-surface: #faf5ff;
+  --on-surface-variant: #ddd6fe;
+  --mesh-1: rgba(167, 139, 250, 0.17);
+  --mesh-2: rgba(236, 72, 153, 0.12);
 }
 
 body {
@@ -760,7 +1033,337 @@ h1, h2, h3, h4, h5, h6 {
   50% { transform: translateY(-10px); }
 }
 
+/* Music equalizer bars */
+@keyframes musicBar {
+  0%, 100% { height: 4px; }
+  25% { height: 18px; }
+  50% { height: 10px; }
+  75% { height: 22px; }
+}
+.music-bar {
+  height: 6px;
+  width: 4px;
+  border-radius: 2px;
+  animation: musicBar 1.1s ease-in-out infinite;
+}
+
 body.electron-window {
   background-color: transparent !important;
   background-image: none !important;
+}
+
+/* ==========================================================================
+   PRODUCTIVEDUDE V3 — Design Language
+   Classic typography · 2D graphic elements · Scroll choreography
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   Classic typography (serif editorial headlines)
+   -------------------------------------------------------------------------- */
+.font-classic {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.font-classic-light {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 500;
+}
+.font-classic2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+/* Eyebrow labels with classic flavor */
+.eyebrow-classic {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   2D Graphic Elements — flat, toon-styled, sticker-like
+   -------------------------------------------------------------------------- */
+
+/* Thick-bordered "toon" card (flat illustration style) */
+.toon-card {
+  background: var(--surface-color);
+  border: 3px solid var(--on-surface);
+  border-radius: 24px;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+.toon-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.14);
+}
+.toon-card:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.14);
+}
+
+/* Toon button — thick outline + hard offset shadow, pressed on click */
+.toon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 3px solid var(--on-surface);
+  border-radius: 999px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18);
+  font-weight: 800;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.toon-btn:hover { transform: translateY(-1px); }
+.toon-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* Hard shadow (flat sticker depth) */
+.shadow-hard { box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15); }
+.shadow-hard-lg { box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.15); }
+
+/* Sticker badge */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.75);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.12);
+}
+.sticker-rotate-right { transform: rotate(3deg); }
+
+/* Dotted halftone pattern */
+.dots-pattern {
+  background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+.dots-pattern-sm {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+/* Fine grid pattern */
+.grid-pattern {
+  background-image:
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Diagonal stripes */
+.stripes-pattern {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    currentColor 0,
+    currentColor 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+/* Squiggle underline (SVG-free, using border trick) */
+.squiggle-underline {
+  position: relative;
+  display: inline-block;
+}
+.squiggle-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 8px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8'><path d='M0 5 Q3 1 6 5 T12 5 T18 5 T24 5' fill='none' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round'/></svg>");
+  background-repeat: repeat-x;
+  background-size: 24px 8px;
+}
+
+/* Blob shape */
+.blob {
+  border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%;
+  animation: blob-morph 8s ease-in-out infinite;
+}
+@keyframes blob-morph {
+  0%, 100% { border-radius: 60% 40% 55% 45% / 55% 45% 60% 40%; }
+  50% { border-radius: 45% 55% 40% 60% / 60% 40% 55% 45%; }
+}
+
+/* Cartoon sparkle / star */
+.sparkle {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  background: #fbbf24;
+  -webkit-clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: sparkle-twinkle 2.4s ease-in-out infinite;
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(0.6) rotate(20deg); opacity: 0.5; }
+}
+
+/* Bouncing emoji deco */
+.deco-bounce { animation: deco-bounce 2.6s ease-in-out infinite; }
+@keyframes deco-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-14px) rotate(-4deg); }
+  70% { transform: translateY(4px) rotate(3deg); }
+}
+
+/* Wavy scroll hint mouse */
+.scroll-mouse {
+  width: 26px;
+  height: 42px;
+  border: 3px solid currentColor;
+  border-radius: 14px;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+.scroll-mouse::after {
+  content: '';
+  width: 4px;
+  height: 8px;
+  border-radius: 4px;
+  background: currentColor;
+  animation: scroll-wheel 1.6s ease-in-out infinite;
+}
+@keyframes scroll-wheel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll Choreography — snap, reveal, parallax, kenburns
+   -------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+.scroll-snap-y {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.scroll-snap-y::-webkit-scrollbar { display: none; }
+.scroll-snap-child {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Reveal system driven by .reveal-visible toggled via IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(42px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-left { transform: translateX(-64px); }
+.reveal-right { transform: translateX(64px); }
+.reveal-scale { transform: scale(0.82); }
+.reveal-blur { filter: blur(14px); transform: translateY(24px); }
+.reveal-rotate { transform: rotate(-6deg) translateY(32px); }
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+.reveal-delay-1 { transition-delay: 0.12s; }
+.reveal-delay-2 { transition-delay: 0.24s; }
+.reveal-delay-3 { transition-delay: 0.36s; }
+.reveal-delay-4 { transition-delay: 0.48s; }
+.reveal-delay-5 { transition-delay: 0.6s; }
+
+/* Parallax helper */
+.parallax { will-change: transform; }
+
+/* Ken Burns slow zoom for hero backgrounds */
+.kenburns {
+  animation: kenburns 18s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-1.5%, 1.5%); }
+}
+
+/* Progress rail for snap slides */
+.slide-rail {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.slide-rail button {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  background: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.slide-rail button.active {
+  transform: scale(1.5);
+  opacity: 1;
+  background: currentColor;
+}
+
+/* 3D flip card used across the app */
+.tilt-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+}
+
+/* Floating gradient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+.orb-float { animation: orb-float 12s ease-in-out infinite; }
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -40px) scale(1.15); }
+}
+
+/* Infinite career marquee */
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
