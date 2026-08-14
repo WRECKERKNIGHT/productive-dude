@@ -4,6 +4,26 @@ import { clamp, easeInOut, sectionProgress, velocitySkew } from '../lib/scrollfx
 
 const getThemeAccent = (id) => (THEME_PRESETS.find(t => t.id === id) || THEME_PRESETS[0]).accent;
 
+// Shared eyebrow pill — consistent narrative labels across every section.
+const Eyebrow = ({ color = 'var(--primary)', className = '', children }) => (
+  <span
+    className={`px-4 py-1.5 rounded-full border text-[11px] font-bold tracking-[0.25em] uppercase inline-block ${className}`}
+    style={{ color, backgroundColor: `${color}1a`, borderColor: `${color}33` }}
+  >
+    {children}
+  </span>
+);
+
+// Chapter marker — cinematic section index in the top-left corner.
+const Chapter = ({ n, total = 9, label }) => (
+  <div className="absolute top-5 left-6 z-20 hidden md:flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+    <span style={{ color: 'var(--primary)' }}>{String(n).padStart(2, '0')}</span>
+    <span className="w-8 h-px bg-outline/30" />
+    <span>{label}</span>
+    <span className="text-outline/50">· {String(total).padStart(2, '0')}</span>
+  </div>
+);
+
 const APP_FEATURES = [
   { icon: 'check_circle', title: 'Tasks', desc: 'Daily to-do engine with categories & due times', color: 'theme-forest-green' },
   { icon: 'repeat', title: 'Habit Tracker', desc: 'Build streaks that stick with weekly grids', color: 'theme-sunset-orange' },
@@ -608,10 +628,10 @@ export default function LandingPage({ onStart }) {
         <div className="orb orb-float top-[-10%] left-[-10%] w-[45vw] h-[45vw]" style={{ backgroundColor: 'var(--primary)' }} />
         <div className="orb orb-float bottom-[-15%] right-[-10%] w-[40vw] h-[40vw]" style={{ backgroundColor: 'var(--tertiary)', animationDelay: '-6s' }} />
 
+        <Chapter n={2} label="Careers" />
+
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
-          <span className="reveal px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
-            One OS, Every Craft
-          </span>
+          <div className="reveal"><Eyebrow color="var(--primary)">One OS, Every Craft</Eyebrow></div>
           <h2 className="reveal reveal-delay-1 font-classic text-[40px] md:text-[58px] mt-4">
             Built for <span className="italic" style={{ color: 'var(--primary)' }}>14 real careers.</span>
           </h2>
@@ -660,11 +680,11 @@ export default function LandingPage({ onStart }) {
           <div className="absolute inset-0 stripes-pattern opacity-20" />
           <div className="orb orb-float top-[-20%] right-[-10%] w-[40vw] h-[40vw]" style={{ backgroundColor: 'var(--primary)' }} />
 
+          <Chapter n={3} label="Axis Flip" />
+
           <div className="relative z-10 px-6 pb-8 max-w-6xl mx-auto w-full flex items-end justify-between">
             <div>
-              <span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
-                Axis Flip · Horizontal Track
-              </span>
+              <Eyebrow color="var(--primary)">Axis Flip · Horizontal Track</Eyebrow>
               <h2 className="reveal reveal-delay-1 font-classic text-[36px] md:text-[52px] mt-4">
                 The whole day, <span className="italic" style={{ color: 'var(--primary)' }}>sideways.</span>
               </h2>
@@ -711,6 +731,8 @@ export default function LandingPage({ onStart }) {
           <div className="absolute inset-0 dots-pattern opacity-30" />
           <div className="orb orb-float top-[-15%] left-[-10%] w-[38vw] h-[38vw]" style={{ backgroundColor: 'var(--secondary)' }} />
           <div className="orb orb-float bottom-[-20%] right-[-8%] w-[42vw] h-[42vw]" style={{ backgroundColor: 'var(--primary)', animationDelay: '-7s' }} />
+
+          <Chapter n={4} label="Assembly" />
 
           {/* Progress column */}
           <div className="absolute left-5 md:left-10 top-1/2 -translate-y-1/2 z-20 flex items-center gap-3">
@@ -772,6 +794,8 @@ export default function LandingPage({ onStart }) {
         <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-background" />
 
+          <Chapter n={5} label="Reveal" />
+
           <div ref={clipCircleRef} className="absolute inset-0" style={{ clipPath: 'circle(5% at 50% 50%)', opacity: 0 }}>
             <img src="/img/hero/slide-team.jpg" alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
@@ -803,11 +827,11 @@ export default function LandingPage({ onStart }) {
           <div className="absolute inset-0 bg-background" />
           <div className="absolute inset-0 grid-pattern opacity-25" />
 
+          <Chapter n={6} label="Depth" />
+
           <div className="relative z-10 w-full max-w-5xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="text-left order-2 lg:order-1">
-              <span className="reveal px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
-                2.5D Depth Parallax
-              </span>
+              <div className="reveal"><Eyebrow color="var(--secondary)">2.5D Depth Parallax</Eyebrow></div>
               <h2 className="reveal reveal-delay-1 font-classic text-[40px] md:text-[54px] mt-4">
                 Photos with <span className="italic" style={{ color: 'var(--secondary)' }}>real depth.</span>
               </h2>
@@ -847,11 +871,10 @@ export default function LandingPage({ onStart }) {
       {/* ===================== SLIDE 3 — THE METHOD ===================== */}
       <section className="scroll-snap-child flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-30" />
+        <Chapter n={7} label="Method" />
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-10">
           <div className="text-center mb-10">
-            <span className="reveal px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
-              The Productive Method
-            </span>
+            <div className="reveal"><Eyebrow color="var(--secondary)">The Productive Method</Eyebrow></div>
             <h2 className="reveal reveal-delay-1 font-classic text-[40px] md:text-[54px] mt-4">
               Plan. <span className="italic" style={{ color: 'var(--secondary)' }}>Focus.</span> Achieve.
             </h2>
@@ -889,12 +912,11 @@ export default function LandingPage({ onStart }) {
       <section className="scroll-snap-child flex flex-col justify-center overflow-hidden">
         <img src="/img/hero/slide-books.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+        <Chapter n={8} label="Suite" />
 
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-10">
           <div className="text-center mb-10">
-            <span className="reveal px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold tracking-[0.25em] uppercase inline-block">
-              Everything Included
-            </span>
+            <div className="reveal"><Eyebrow color="var(--primary)">Everything Included</Eyebrow></div>
             <h2 className="reveal reveal-delay-1 font-classic text-[40px] md:text-[54px] mt-4">
               A <span className="italic" style={{ color: 'var(--primary)' }}>whole suite</span> in your pocket.
             </h2>
@@ -924,6 +946,7 @@ export default function LandingPage({ onStart }) {
       <section className="scroll-snap-child flex flex-col justify-between overflow-hidden">
         <img src="/img/misc/workspace.jpg" alt="" className="absolute inset-0 w-full h-full object-cover kenburns" />
         <div className="absolute inset-0 bg-black/70" />
+        <Chapter n={9} label="Enter" />
 
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 flex-1 flex flex-col items-center justify-center text-center">
           <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-tertiary flex items-center justify-center shadow-lg shadow-primary/40 mb-6">
