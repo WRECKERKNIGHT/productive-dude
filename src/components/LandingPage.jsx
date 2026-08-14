@@ -311,9 +311,47 @@ export default function LandingPage({ onStart }) {
 
     const maxScroll = () => root.scrollHeight - root.clientHeight;
 
+    const apply = (delta) => {
+      const max = maxScroll();
+      const atTop = target <= 0 && delta < 0;
+      const atBottom = target >= max && delta > 0;
+      const d = (atTop || atBottom) ? delta * 0.22 : delta; // edge resistance
+      target = Math.min(Math.max(target + d, 0), max);
+    };
+
     const onWheel = (e) => {
       e.preventDefault();
-      target = Math.min(Math.max(target + e.deltaY, 0), maxScroll());
+      apply(e.deltaY);
+    };
+
+    const onKey = (e) => {
+      const page = root.clientHeight;
+      const half = page * 0.5;
+      const isTyping = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+      if (isTyping) return;
+      switch (e.key) {
+        case 'ArrowDown':
+        case 'ArrowUp':
+          e.preventDefault();
+          apply(e.key === 'ArrowDown' ? half : -half);
+          break;
+        case 'PageDown':
+        case 'PageUp':
+        case ' ':
+          e.preventDefault();
+          apply(e.key === 'PageUp' ? -page : page);
+          break;
+        case 'Home':
+          e.preventDefault();
+          target = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          target = maxScroll();
+          break;
+        default:
+          break;
+      }
     };
 
     const tick = (now) => {
@@ -338,6 +376,7 @@ export default function LandingPage({ onStart }) {
     };
 
     root.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKey);
     raf = requestAnimationFrame(tick);
 
     engineRef.current.goto = (y) => {
@@ -350,6 +389,7 @@ export default function LandingPage({ onStart }) {
 
     return () => {
       root.removeEventListener('wheel', onWheel);
+      window.removeEventListener('keydown', onKey);
       cancelAnimationFrame(raf);
     };
   }, []);
