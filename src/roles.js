@@ -774,3 +774,12 @@ export const WORKLOADS = [
   { id: 'medium', label: 'Balanced', desc: '3–5 meaningful tasks per day' },
   { id: 'heavy', label: 'Intense', desc: '6+ tasks, packed schedule, sprint mode' }
 ];
+
+export const THEME_PRESETS = [
+  { id: 'focus-blue', name: 'Ocean Blue', accent: '#2563eb' },
+  { id: 'theme-forest-green', name: 'Forest Green', accent: '#16a34a' },
+  { id: 'theme-sunset-orange', name: 'Ember Orange', accent: '#ea580c' },
+  { id: 'theme-royal-purple', name: 'Royal Purple', accent: '#7c3aed' },
+  { id: 'theme-sweet-rose', name: 'Rose Petal', accent: '#e11d48' },
+  { id: 'theme-teal', name: 'Lagoon Teal', accent: '#0d9488' }
+];
