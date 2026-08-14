@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ROLES, THEME_PRESETS } from '../roles';
+import { clamp, easeInOut, sectionProgress, velocitySkew } from '../lib/scrollfx';
 
 const getThemeAccent = (id) => (THEME_PRESETS.find(t => t.id === id) || THEME_PRESETS[0]).accent;
 
@@ -147,10 +148,8 @@ export default function LandingPage({ onStart }) {
     let raf = 0;
 
     const tick = () => {
-      const { scroll, velocity } = engineRef.current;
-      const sectionTop = section.offsetTop;
-      const travel = section.offsetHeight - root.clientHeight;
-      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
+      const { velocity } = engineRef.current;
+      const p = sectionProgress(engineRef.current, section, root.clientHeight);
       const center = p - 0.5;
 
       parallaxLayersRef.current.forEach((el, i) => {
@@ -183,11 +182,8 @@ export default function LandingPage({ onStart }) {
     let raf = 0;
 
     const tick = () => {
-      const { scroll } = engineRef.current;
-      const sectionTop = section.offsetTop;
-      const travel = section.offsetHeight - root.clientHeight;
-      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
-      const ease = p * p * (3 - 2 * p);
+      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const ease = easeInOut(p);
 
       circle.style.clipPath = `circle(${5 + ease * 115}% at 50% 50%)`;
       circle.style.opacity = ease > 0.01 ? 1 : 0;
@@ -195,8 +191,8 @@ export default function LandingPage({ onStart }) {
       lines.forEach((line, i) => {
         const start = i / lines.length;
         const end = (i + 1) / lines.length;
-        const local = Math.min(Math.max((p - start) / (end - start), 0), 1);
-        const reveal = local * local * (3 - 2 * local);
+        const local = clamp((p - start) / (end - start), 0, 1);
+        const reveal = easeInOut(local);
         line.style.clipPath = `inset(0 0 ${(1 - reveal) * 100}% 0)`;
         line.style.transform = `translateY(${(1 - reveal) * -18}px)`;
       });
@@ -225,12 +221,9 @@ export default function LandingPage({ onStart }) {
     let lastP = -1;
 
     const tick = () => {
-      const { scroll, velocity } = engineRef.current;
-      const sectionTop = section.offsetTop;
-      const travel = section.offsetHeight - root.clientHeight;
-      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
-
-      const ease = p * p * (3 - 2 * p);
+      const { velocity } = engineRef.current;
+      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const ease = easeInOut(p);
       const settle = Math.abs(p - lastP) < 0.001 && Math.abs(velocity) < 0.2;
       lastP = p;
 
@@ -287,11 +280,9 @@ export default function LandingPage({ onStart }) {
     window.addEventListener('resize', measure);
 
     const tick = () => {
-      const { scroll, velocity } = engineRef.current;
-      const sectionTop = section.offsetTop;
-      const travel = section.offsetHeight - root.clientHeight;
-      const p = travel > 0 ? Math.min(Math.max((scroll - sectionTop) / travel, 0), 1) : 0;
-      const skew = Math.max(Math.min(velocity * 4, 14), -14);
+      const { velocity } = engineRef.current;
+      const p = sectionProgress(engineRef.current, section, root.clientHeight);
+      const skew = velocitySkew(velocity);
       track.style.transform = `translate3d(${-p * range}px, 0, 0) skewX(${skew}deg)`;
       raf = requestAnimationFrame(tick);
     };
