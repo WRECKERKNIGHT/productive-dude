@@ -90,6 +90,9 @@ const KINETIC_LINE_2 = ['master', 'your', 'craft.'];
 
 export default function LandingPage({ onStart }) {
   const [loadDemo, setLoadDemo] = useState(true);
+  const [reduceMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const rootRef = useRef(null);
   const engineRef = useRef({ scroll: 0, max: 0, velocity: 0 });
   const horizontalRef = useRef(null);
@@ -301,7 +304,7 @@ export default function LandingPage({ onStart }) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (reduceMotion) return;
 
     let target = root.scrollTop;
     let current = root.scrollTop;
@@ -392,7 +395,7 @@ export default function LandingPage({ onStart }) {
       window.removeEventListener('keydown', onKey);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [reduceMotion]);
 
   // Reveal-on-scroll choreography for the whole scroll-snap deck
   useEffect(() => {
@@ -454,7 +457,7 @@ export default function LandingPage({ onStart }) {
   const careers = [...ROLES, ...ROLES];
 
   return (
-    <div ref={rootRef} className="scroll-snap-y h-screen bg-background text-on-surface select-none" style={{ scrollSnapType: 'none' }}>
+    <div ref={rootRef} className="scroll-snap-y h-screen bg-background text-on-surface select-none" style={reduceMotion ? undefined : { scrollSnapType: 'none' }}>
       <div className="slide-rail" style={{ color: 'var(--primary)' }}>
         {['Home', 'Careers', 'Axis Flip', 'Assembly', 'Reveal', 'Depth', 'Method', 'Suite', 'Enter'].map((label, i) => (
           <button key={label} onClick={() => scrollToSlide(i)} title={label} aria-label={label} />
