@@ -586,6 +586,7 @@ export default function LandingPage({ onStart }) {
                   type="checkbox"
                   checked={loadDemo}
                   onChange={(e) => setLoadDemo(e.target.checked)}
+                  aria-label="Load demo tutorial data"
                   className="w-4 h-4 rounded border-white/40 text-primary focus:ring-primary/20 cursor-pointer"
                 />
                 <div className="text-left">
@@ -1006,6 +1007,7 @@ export default function LandingPage({ onStart }) {
               type="checkbox"
               checked={loadDemo}
               onChange={(e) => setLoadDemo(e.target.checked)}
+              aria-label="Load demo tutorial data"
               className="w-4 h-4 rounded border-white/40 text-primary focus:ring-primary/20 cursor-pointer"
             />
             <div className="text-left">

@@ -1373,3 +1373,19 @@ html {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Focus visibility for the wheel-driven scroll deck */
+.slide-rail button:focus-visible,
+.toon-btn:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-mouse,
+  .orb-float,
+  .deco-bounce {
+    animation: none !important;
+    display: none;
+  }
+}
