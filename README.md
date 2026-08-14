@@ -58,6 +58,34 @@ npx electron-builder --win --dir
 
 ---
 
+## 🎬 Scroll Choreography Engine (V2.1 Landing)
+
+The pre-dashboard landing page is a scroll-locked cinematic deck. Scrolling drives a
+custom **lerp physics engine** (`src/lib/scrollfx.js`) rather than the native scrollbar:
+
+*   **Inertia & Momentum** — wheel input feeds a virtual target; a `requestAnimationFrame`
+    loop eases `scrollTop` toward it every frame, and exposes a live **velocity** value
+    (px/frame) consumed by the FX below.
+*   **Kinetic Typography** — hero words stretch and skew elastically with scroll velocity,
+    settling back to rest via momentum decay; the whole lockup parallaxes upward.
+*   **Horizontal Track Lock (Axis Flip)** — a tall pinned section maps vertical progress
+    to horizontal travel across a gallery strip, with velocity-based skew distortion.
+*   **Pinned Scroll Timeline** — a "Life OS assembly" scene converges scattered feature
+    cards into place (0 → 100%) while milestone panels crossfade at progress thresholds.
+*   **Clip-Path Circle Reveal** — a tiny circular photo expands to full-bleed while the
+    headline un-masks line-by-line, like text written by light.
+*   **2.5D Depth Parallax** — layered stock photography drifts at different rates and
+    smears/blurs with scroll momentum (shader-free depth).
+*   **Keyboard + Edge Resistance** — arrow/page/Home/End keys drive the same engine;
+    over-scrolling at the top/bottom is damped like a rubber band.
+*   **Accessibility** — `prefers-reduced-motion` users and touch devices fall back to
+    native scroll with CSS scroll-snap intact.
+
+All maths (clamp / smoothstep / section progress) live in `src/lib/scrollfx.js` and are
+shared by every section, with layout reads cached to keep the rAF loops cheap.
+
+---
+
 ## 📂 Standalone Releases
 
 Pre-compiled platform binaries are available for direct execution:
